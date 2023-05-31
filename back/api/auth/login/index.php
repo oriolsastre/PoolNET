@@ -1,5 +1,5 @@
 <?php
-if($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   header('Access-Control-Allow-Origin: *');
   header('Content-Type: application/json');
   header('Access-Control-Allow-Methods: POST');
@@ -43,6 +43,13 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
   ));
 
   http_response_code(200);
+  setcookie("token", $token, [
+    "httpOnly" => true,
+    "expires" => time() + (10 * 365 * 24 * 60 * 60), // 10 anys des d'ara
+    "path" => "/", // Disponible en tot el lloc
+    // "secure" => true, // Només disponible a través de HTTPS
+    "samesite" => "Strict" // Només disponible per al mateix lloc (no cross-site)
+  ]);
   echo json_encode(
     array("token" => $token)
   );
