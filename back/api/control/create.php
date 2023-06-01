@@ -5,10 +5,9 @@ header('Content-Type: application/json');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Methods, Content-Type, Authorization, X-Requested-With');
 
-
-
 include_once '../../config/Database.php';
 include_once '../../models/Control.php';
+include_once '../../models/JwtHandler.php';
 
 // Init DB & Connect
 $database = new Database();
@@ -17,16 +16,21 @@ $dbcnx = $database->connect();
 // Init Control Object
 $control = new Control($dbcnx);
 
+// Init JWT Handler
+$jwt = new JwtHandler($dbcnx);
+
 // Get raw posted data
 $data = json_decode(file_get_contents("php://input"));
+// Get user id from token
+$userID = $jwt->jwtDecodeData($_COOKIE['token'])->userID;
 
-$control->ph = $data->ph;
-$control->clor = $data->clor;
-$control->alcali = $data->alcali;
-$control->transparent = $data->transparent;
-$control->temperatura = $data->temperatura;
-$control->fons = $data->fons;
-$control->usuari = $data->usuari;
+if(isset($data->ph)) $control->ph = $data->ph; else $control->ph = null;
+if(isset($data->clor)) $control->clor = $data->clor; else $control->clor = null;
+if(isset($data->alcali)) $control->alcali = $data->alcali; else $control->alcali = null;
+if(isset($data->transparent)) $control->transparent = $data->transparent; else $control->transparent = null;
+if(isset($data->temperatura)) $control->temperatura = $data->temperatura; else $control->temperatura = null;
+if(isset($data->fons)) $control->fons = $data->fons; else $control->fons = null;
+$control->usuari = $userID;
 
 if($control->create()){
   http_response_code(201);

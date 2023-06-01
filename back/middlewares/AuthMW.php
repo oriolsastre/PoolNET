@@ -8,18 +8,15 @@ class Auth extends JwtHandler
   protected $headers;
   protected $token;
 
-  public function __construct($db, $headers)
+  public function __construct($db)
   {
     parent::__construct();
     $this->db = $db;
-    $this->headers = $headers;
   }
 
   public function isValid()
   {
-    //if (array_key_exists('Authorization', $this->headers) && preg_match('/Bearer\s(\S+)/', $this->headers['Authorization'], $matches)) {
     if (isset($_COOKIE['token'])){
-      // $data = $this->jwtDecodeData($matches[1]);
       $data = $this->jwtDecodeData($_COOKIE['token']);
       if(isset($data->userID)){
         $user = new User($this->db);

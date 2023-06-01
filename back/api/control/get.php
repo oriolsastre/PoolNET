@@ -1,10 +1,10 @@
 <?php
+include_once '../../config/Database.php';
+include_once '../../models/Control.php';
+
 // Headers
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
-
-include_once '../../config/Database.php';
-include_once '../../models/Control.php';
 
 // Init DB & Connect
 $database = new Database();
@@ -27,7 +27,7 @@ if ($num > 0) {
     $control_item = array(
       'id' => $controlID,
       'data_hora' => $data_hora,
-      'pH' => $ph,
+      'ph' => $ph,
       'clor' => $clor,
       'alcali' => $alcali,
       'temperatura' => $temperatura,

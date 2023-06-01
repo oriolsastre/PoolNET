@@ -65,9 +65,10 @@ class Control
     $stmt = $this->dbcnx->prepare($query);
 
     // Clean data
-    $this->transparent = intval($this->transparent);
-    $this->temperatura = intval($this->temperatura);
-    $this->fons = intval($this->fons);
+    if($this->transparent != null) $this->transparent = intval($this->transparent);
+    if($this->temperatura != null) $this->temperatura = intval($this->temperatura);
+    if($this->fons != null) $this->fons = intval($this->fons);
+    $this->usuari = intval($this->usuari);
 
     // Bind data
     $stmt->bindParam(':ph', $this->ph);

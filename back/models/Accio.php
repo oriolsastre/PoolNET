@@ -47,14 +47,15 @@ class Accio
 
     $stmt = $this->dbcnx->prepare($query);
     // Clean data
-    $this->ph = intval($this->ph);
-    $this->clor = intval($this->clor);
-    $this->antialga = intval($this->antialga);
-    $this->fluoculant = intval($this->fluoculant);
-    $this->aspirar = intval($this->aspirar);
-    $this->alcali = intval($this->alcali);
-    $this->aglutinant = intval($this->aglutinant);
+    if($this->ph != null) $this->ph = intval($this->ph);
+    if($this->clor != null) $this->clor = intval($this->clor);
+    if($this->antialga != null) $this->antialga = intval($this->antialga);
+    if($this->fluoculant != null) $this->fluoculant = intval($this->fluoculant);
+    if($this->aspirar != null) $this->aspirar = intval($this->aspirar);
+    if($this->alcali != null) $this->alcali = intval($this->alcali);
+    if($this->aglutinant != null) $this->aglutinant = intval($this->aglutinant);
     $this->usuari = intval($this->usuari);
+
     // Bind data
     $stmt->bindParam(':ph', $this->ph);
     $stmt->bindParam(':clor', $this->clor);
