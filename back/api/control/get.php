@@ -1,47 +1,29 @@
 <?php
-include_once '../../config/Database.php';
-include_once '../../models/Control.php';
+require_once '../../models/Control.php';
 
 // Headers
 header('Access-Control-Allow-Origin: *');
 header('Content-Type: application/json');
 
-// Init DB & Connect
-$database = new Database();
-$dbcnx = $database->connect();
-
-// Init Control Object
-$control = new Control($dbcnx);
-
 //Result
-$result = $control->read();
+$result = Control::trobarTots();
 
-$num = $result->rowCount();
-http_response_code(200);
-if ($num > 0) {
-  $control_array = array();
-  $control_array['data'] = array();
-
-  while($row = $result->fetch(PDO::FETCH_ASSOC)){
-    extract($row);
-    $control_item = array(
-      'id' => $controlID,
-      'data_hora' => $data_hora,
-      'ph' => $ph,
-      'clor' => $clor,
-      'alcali' => $alcali,
-      'temperatura' => $temperatura,
-      'transparent' => $transparent,
-      'fons' => $fons,
-      'usuari' => $usuari
+if ($result["success"]) {
+  http_response_code(200);
+  $num = count($result);
+  if ($num > 0) {
+    echo json_encode($result["data"]);
+    return;
+  } else {
+    echo json_encode(
+      array('message' => 'No s\'ha trobat cap control')
     );
-    array_push($control_array['data'], $control_item);
+    return;
   }
-
-  // To JSON
-  echo json_encode($control_array);
 } else {
+  http_response_code(500);
   echo json_encode(
-    array('message' => 'No s\'ha trobat cap control')
+    array('error' => 'Error obtenint les dades.')
   );
+  return;
 }

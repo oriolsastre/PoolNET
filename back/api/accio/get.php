@@ -31,7 +31,10 @@ if ($num > 0) {
       'aspirar' => $aspirar,
       'alcali' => $alcali,
       'aglutinant' => $aglutinant,
-      'usuari' => $usuari
+      'usuari' => array(
+        'userID' => $userID,
+        'usuari' => $usuari
+      )
     );
     array_push($accio_array['data'], $accio_item);
   }

@@ -11,10 +11,10 @@ class Database
 
   public function __construct()
   {
-   $this->host = getenv('ENV_DB_HOST');
-   $this->db_name = getenv('ENV_DB_NAME');
-   $this->user = getenv('ENV_DB_USER');
-   $this->password = getenv('ENV_DB_PSWD');
+    $this->host = getenv('ENV_DB_HOST');
+    $this->db_name = getenv('ENV_DB_NAME');
+    $this->user = getenv('ENV_DB_USER');
+    $this->password = getenv('ENV_DB_PSWD');
   }
   // DB connect
   public function connect()

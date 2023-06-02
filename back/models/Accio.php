@@ -1,20 +1,22 @@
 <?php
+// require __DIR__ . '/User.php';
 class Accio
 {
 
   private $dbcnx;
   private $table = 'piscinaAccio';
 
-  public $accioID;
-  public $data_hora;
-  public $ph;
-  public $clor;
-  public $antialga;
-  public $fluoculant;
-  public $aspirar;
-  public $alcali;
-  public $aglutinant;
-  public $usuari;
+  public ?int $accioID;
+  public ?string $data_hora;
+  public ?int $ph;
+  public ?int $clor;
+  public ?int $antialga;
+  public ?int $fluoculant;
+  public ?int $aspirar;
+  public ?int $alcali;
+  public ?int $aglutinant;
+  public ?int $usuari;
+  public ?User $user;
 
   public function __construct($db)
   {
@@ -23,7 +25,7 @@ class Accio
 
   public function read($limit = 20)
   {
-    $query = 'SELECT * FROM ' . $this->table . ' ORDER BY data_hora DESC LIMIT ' . $limit;
+    $query = 'SELECT '. $this->table. '.*, userID, user.usuari AS usuari FROM ' . $this->table . ' JOIN user ON ' . $this->table . '.usuari=userID ORDER BY data_hora DESC LIMIT ' . $limit;
 
     // Prepare statement
     $stmt = $this->dbcnx->prepare($query);

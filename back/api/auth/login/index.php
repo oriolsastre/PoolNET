@@ -5,7 +5,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   header('Access-Control-Allow-Methods: POST');
   header('Access-Control-Allow-Headers: Access-Control-Allow-Methods, Content-Type, Authorization, X-Requested-With');
 
-
   include_once __DIR__ . '/../../../config/Database.php';
   include_once __DIR__ . '/../../../models/User.php';
   include_once __DIR__ . '/../../../models/JwtHandler.php';

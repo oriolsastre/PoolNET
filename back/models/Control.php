@@ -1,42 +1,29 @@
 <?php
-class Control
+require_once __DIR__ . '/../database/ControlDB.php';
+class Control extends ControlDB
 {
-  // DB
-  private $dbcnx;
-  private $table = 'piscinaControl';
-
   // Properties
-  public $controlID;
-  public $data_hora;
-  public $ph;
-  public $clor;
-  public $alcali;
-  public $temperatura;
-  public $transparent;
-  public $fons;
-  public $usuari;
-  // public $usuari_nom;
+  public ?int $controlID;
+  public ?string $data_hora;
+  public ?float $ph;
+  public ?float $clor;
+  public ?float $alcali;
+  public ?int $temperatura;
+  public ?int $transparent;
+  public ?int $fons;
+  public ?int $usuari;   // Fa referencia a l'Id
+  public ?User $user;
 
-  public function __construct($db)
+  public function __construct(?array $data = null)
   {
-    $this->dbcnx = $db;
+    if ($data != null) {
+      foreach ($data as $key => $value) {
+        if (property_exists($this, $key)) $this->$key = $value;
+      }
+    }
   }
 
-  // GET controls
-  public function read($limit=20)
-  {
-    $query = 'SELECT * FROM ' . $this->table . ' ORDER BY data_hora DESC LIMIT ' . $limit;
-
-    // Prepare statement
-    $stmt = $this->dbcnx->prepare($query);
-
-    // Execute query
-    $stmt->execute();
-
-    return $stmt;
-  }
-
-  public function read_single(){
+  /* public function read_single(){
     $query = 'SELECT * FROM ' . $this->table . ' WHERE controlID = ?';
 
     // Prepare statement
@@ -49,42 +36,24 @@ class Control
     $stmt->execute();
 
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
+  } */
+
+  public function desar()
+  {
+    return parent::crear($this);
   }
 
-  public function create(){
-    $query = 'INSERT INTO ' . $this->table . ' SET
-      ph = :ph,
-      clor = :clor,
-      alcali = :alcali,
-      temperatura = :temperatura,
-      transparent = :transparent,
-      fons = :fons,
-      usuari = :usuari';
-    
-    // Prepare statement
-    $stmt = $this->dbcnx->prepare($query);
-
-    // Clean data
-    if($this->transparent != null) $this->transparent = intval($this->transparent);
-    if($this->temperatura != null) $this->temperatura = intval($this->temperatura);
-    if($this->fons != null) $this->fons = intval($this->fons);
-    $this->usuari = intval($this->usuari);
-
-    // Bind data
-    $stmt->bindParam(':ph', $this->ph);
-    $stmt->bindParam(':clor', $this->clor);
-    $stmt->bindParam(':alcali', $this->alcali);
-    $stmt->bindParam(':transparent', $this->transparent);
-    $stmt->bindParam(':temperatura', $this->temperatura);
-    $stmt->bindParam(':fons', $this->fons);
-    $stmt->bindParam(':usuari', $this->usuari);
-
-    if($stmt->execute()){
-      return true;
+  /**
+   * Comprova si totes les propietats de l'objecte són null. Per evitar desar objectes nul a la DB
+   * @return bool
+   */
+  public function allNull()
+  {
+    foreach (get_object_vars($this) as $propietat => $valor) {
+      if ($propietat != 'usuari') {
+        if (!is_null($valor)) return false;
+      }
     }
-    // Tractar errors
-    printf("Error: %s.\n", $stmt->error);
-
-    return false;
+    return true;
   }
 }
