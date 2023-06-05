@@ -1,8 +1,12 @@
 <?php
-require_once __DIR__ . '/../database/ControlDB.php';
-require_once __DIR__ . '/../models/User.php';
-class Control extends ControlDB
+require_once __DIR__ . '/Model.php';
+require_once __DIR__ . '/User.php';
+class Control extends Model
 {
+  protected static string $table = 'piscinaControl';
+  protected static string $idKey = 'controlID';
+  protected static array $uniqueKeyValues = ['controlID'];
+
   // Properties
   public ?int $controlID;
   public ?string $data_hora;
@@ -17,50 +21,45 @@ class Control extends ControlDB
 
   public function __construct(?array $data = null)
   {
-    if ($data != null) {
-      foreach ($data as $key => $value) {
-        if (property_exists($this, $key)) $this->$key = $value;
-      }
-      if ($this->usuari != null) {
-        $thisUser = new User();
-        $thisUser->getUserBy('userID', $this->usuari);
-        $this->user = $thisUser;
-      }
+    parent::__construct($data);
+    if (isset($this->usuari)) {
+      $this->getDadesUsuari();
     }
   }
 
-  /* public function read_single(){
-    $query = 'SELECT * FROM ' . $this->table . ' WHERE controlID = ?';
-
-    // Prepare statement
-    $stmt = $this->dbcnx->prepare($query);
-
-    // Bind ? to value
-    $stmt->bindParam(1, $this->controlID);
-
-    // Execute query
-    $stmt->execute();
-
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-  } */
+  // MÈTOODES ESTÀTICS CRUD
+  // MÈTODES NO-ESTÀTICS CRUD
 
   public function desar()
   {
-    return parent::crear($this);
+    $arrayControl = get_object_vars($this);
+    $arrayControl = $this->estandard($arrayControl);
+    return parent::crear($arrayControl);
   }
 
   public function borrar()
   {
-    return parent::eliminar($this->controlID);
+    return parent::borrarPerUnic('controlID', $this->controlID);
+  }
+  
+  // GETTERS
+  public function getDadesUsuari()
+  {
+    if ($this->usuari == null) return false;
+    $this->user = User::trobarPerId($this->usuari);
+    return true;
   }
 
-  public function getUserData()
+  // ALTRES MÈTODES
+  /**
+   * Estandarditza les propietats de l'objecte per a ser creat. Eliminar aquelles columnes que tenen valor per defecte a la DB. O bé la propietat user que és l'objecte relacionat..
+   */
+  private function estandard(array $data)
   {
-    if($this->usuari == null) return false;
-    $thisUser = new User();
-    $thisUser->getUserBy('userID', $this->usuari);
-    $this->user = $thisUser;
-    return true;
+    unset($data['controlID']);
+    unset($data['data_hora']);
+    unset($data['user']);
+    return $data;
   }
 
   /**
