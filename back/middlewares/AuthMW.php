@@ -19,9 +19,8 @@ class Auth extends JwtHandler
     if (isset($_COOKIE['token'])){
       $data = $this->jwtDecodeData($_COOKIE['token']);
       if(isset($data->userID)){
-        $user = new User();
-        $user->userID = $data->userID;
-        if($user->getUserBy('userID')){
+        $user = User::trobarPerId($data->userID);
+        if($user!=null){
           return [
             "success" => true,
           ];

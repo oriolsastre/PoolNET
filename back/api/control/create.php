@@ -17,8 +17,6 @@ $authMW = new Auth($dbcnx);
 $auth = $authMW->isValid();
 
 if ($auth['success']) {
-  // Init Control Object
-  $control = new Control();
   // Get raw posted data
   $data = json_decode(file_get_contents("php://input"), true);
   // Get user id from token
@@ -49,14 +47,8 @@ if ($auth['success']) {
   }
 
   $controlDesat = $control->desar();
-  if ($controlDesat['success']) {
-    http_response_code(201);
-    echo json_encode(
-      array(
-        "message" => "Control de l'aigua creat.",
-        "data" => $control,
-      )
-    );
+  if ($controlDesat) {
+    http_response_code(204);
     return;
   } else {
     http_response_code(500);
