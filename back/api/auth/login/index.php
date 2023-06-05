@@ -9,10 +9,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   include_once __DIR__ . '/../../../models/User.php';
   include_once __DIR__ . '/../../../models/JwtHandler.php';
 
-  $db = new Database();
-  $dbcnx = $db->connect();
+  /* $db = new Database();
+  $dbcnx = $db->connect(); */
 
-  $user = new User($dbcnx);
+  $user = new User();
 
   $data = json_decode(file_get_contents("php://input"));
 
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 
   $user->usuari = $data->usuari;
-  if (!$user->getUserByName() || !$user->checkPswd($data->password)) {
+  if (!$user->getUserBy('usuari') || !$user->checkPswd($data->password)) {
     http_response_code(400);
     echo json_encode(
       array("message" => "Error amb les credencials.")
@@ -37,8 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $token = $jwt->jwtEncodeData('piscina', array(
     'userID' => $user->userID,
     'usuari' => $user->usuari,
-    'email' => $user->email,
-    'data_creacio' => $user->data_creacio,
+    'nivell' => $user->nivell,
+    'email' => $user->getPrivateEmail()
   ));
 
   http_response_code(200);

@@ -1,69 +1,55 @@
 <?php
-include_once __DIR__ . '/../config/env.php';
-class User
+require_once __DIR__ . '/../config/env.php';
+require_once __DIR__ . '/../database/UserDB.php';
+class User extends UserDB
 {
-  // DB
-  private $dbcnx;
-  private $table = 'user';
-
   // Properties
-  public $userID;
-  public $usuari;
-  public $email;
-  private $salt;
-  private $hash;
-  public $nivell;
-  public $data_creacio;
+  public ?int $userID;
+  public ?string $usuari;
+  private ?string $email;
+  private ?string $salt;
+  private ?string $hash;
+  public ?int $nivell;
+  protected ?string $data_creacio;
 
-  public function __construct($db)
+  public function __construct(?array $data = null)
   {
-    $this->dbcnx = $db;
+    if ($data != null) {
+      foreach ($data as $key => $value) {
+        if (property_exists($this, $key)) $this->$key = $value;
+      }
+    }
   }
 
-  public function getUserByName()
+  public function getPrivateEmail()
   {
-    $query = 'SELECT * FROM ' . $this->table . ' WHERE usuari = :usuari';
-    $stmt = $this->dbcnx->prepare($query);
-    $stmt->bindParam(':usuari', $this->usuari);
-    $stmt->execute();
-    
-    if($stmt->rowCount() == 0) return false;
-
-    $singleUser = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-    $this->userID = $singleUser['userID'];
-    $this->email = $singleUser['email'];
-    $this->nivell = $singleUser['nivell'];
-    $this->data_creacio = $singleUser['data_creacio'];
-    $this->hash = $singleUser['hash'];
-    $this->salt = $singleUser['salt'];
-
-    return true;
+    return $this->email;
   }
 
-  public function getUserById()
+  public function getUserBy(string $uniqueKey, $queryId = null)
   {
-    $query = 'SELECT * FROM ' . $this->table . ' WHERE userID = :userID';
-    $stmt = $this->dbcnx->prepare($query);
-    $stmt->bindParam(':userID', $this->userID, PDO::PARAM_INT);
-    $stmt->execute();
-    
-    if($stmt->rowCount() == 0) return false;
-
-    $singleUser = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    $this->usuari = $singleUser['usuari'];
-    $this->email = $singleUser['email'];
-    $this->nivell = $singleUser['nivell'];
-    $this->data_creacio = $singleUser['data_creacio'];
-    $this->hash = $singleUser['hash'];
-    $this->salt = $singleUser['salt'];
-
-    return true;
+    if (!in_array($uniqueKey, parent::$uniqueKeyValues)) return false;
+    if ($queryId === null) {
+      if ($this->{$uniqueKey} === null) return false;
+      $queryId = $this->{$uniqueKey};
+    }
+    $userPerId = parent::trobarPer($uniqueKey, $queryId);
+    if ($userPerId['success']) {
+      $this->userID = $userPerId['data']['userID'];
+      $this->usuari = $userPerId['data']['usuari'];
+      $this->email = $userPerId['data']['email'];
+      $this->nivell = $userPerId['data']['nivell'];
+      $this->data_creacio = $userPerId['data']['data_creacio'];
+      $this->hash = $userPerId['data']['hash'];
+      $this->salt = $userPerId['data']['salt'];
+      return true;
+    }
+    return false;
   }
 
-  public function checkPswd($password) {
-    $hash2 = md5(getenv('ENV_ServerSalt').$this->salt.$password);
+  public function checkPswd($password)
+  {
+    $hash2 = md5(getenv('ENV_ServerSalt') . $this->salt . $password);
     return $hash2 == $this->hash;
   }
 }

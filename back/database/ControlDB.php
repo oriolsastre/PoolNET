@@ -19,17 +19,20 @@ class ControlDB extends Model
     $arrayControl = get_object_vars($control);
     $arrayStdControl = self::estandard($arrayControl);
     // Les dades haurien de venir validades
-    return parent::createDB(self::$table, $arrayStdControl);
+    return parent::create(self::$table, $arrayStdControl);
   }
 
-  public static function trobarId(int $id)
+  public static function trobarPerId(int $id)
   {
     parent::findById(self::$table, self::$idKey, $id);
   }
 
   public static function trobarTots(int $limit = 20)
   {
-    $totsAssoc = parent::findAll(self::$table, null, $limit);
+    $conditions = array(
+      'orderBy' => ['data_hora','DESC'],
+    );
+    $totsAssoc = parent::findAll(self::$table, $conditions, $limit);
     if($totsAssoc["success"]){
       return [
         "success" => true,
@@ -44,5 +47,10 @@ class ControlDB extends Model
       ];
     }
     
+  }
+
+  public static function eliminar(int $id)
+  {
+    return parent::delete(self::$table, self::$idKey, $id);
   }
 }

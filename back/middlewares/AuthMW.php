@@ -19,9 +19,9 @@ class Auth extends JwtHandler
     if (isset($_COOKIE['token'])){
       $data = $this->jwtDecodeData($_COOKIE['token']);
       if(isset($data->userID)){
-        $user = new User($this->db);
+        $user = new User();
         $user->userID = $data->userID;
-        if($user->getUserById()){
+        if($user->getUserBy('userID')){
           return [
             "success" => true,
           ];

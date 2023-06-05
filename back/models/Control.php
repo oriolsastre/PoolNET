@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../database/ControlDB.php';
+require_once __DIR__ . '/../models/User.php';
 class Control extends ControlDB
 {
   // Properties
@@ -19,6 +20,11 @@ class Control extends ControlDB
     if ($data != null) {
       foreach ($data as $key => $value) {
         if (property_exists($this, $key)) $this->$key = $value;
+      }
+      if ($this->usuari != null) {
+        $thisUser = new User();
+        $thisUser->getUserBy('userID', $this->usuari);
+        $this->user = $thisUser;
       }
     }
   }
@@ -41,6 +47,20 @@ class Control extends ControlDB
   public function desar()
   {
     return parent::crear($this);
+  }
+
+  public function borrar()
+  {
+    return parent::eliminar($this->controlID);
+  }
+
+  public function getUserData()
+  {
+    if($this->usuari == null) return false;
+    $thisUser = new User();
+    $thisUser->getUserBy('userID', $this->usuari);
+    $this->user = $thisUser;
+    return true;
   }
 
   /**
