@@ -1,10 +1,7 @@
 <?php
-
-require_once __DIR__ . '/../vendor/autoload.php';
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
-
-include __DIR__ . '/../config/env.php';
+namespace PoolNET;
+use Firebase\JWT\JWT, Firebase\JWT\Key, Exception;
+require_once __DIR__ . '/../config/env.php';
 
 class JwtHandler
 {

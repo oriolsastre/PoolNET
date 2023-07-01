@@ -1,7 +1,5 @@
 <?php
-include_once __DIR__ . '/../../config/Database.php';
-include_once __DIR__ . '/../../middlewares/AuthMW.php';
-include_once __DIR__ . '/../../models/Control.php';
+use PoolNET\config\Database, PoolNET\Control, PoolNET\MW\AuthMW;
 
 // Headers
 header('Access-Control-Allow-Origin: *');
@@ -13,7 +11,7 @@ header('Access-Control-Allow-Headers: Access-Control-Allow-Methods, Content-Type
 $database = new Database();
 $dbcnx = $database->connect();
 
-$authMW = new Auth($dbcnx);
+$authMW = new AuthMW($dbcnx);
 $auth = $authMW->isValid();
 
 if ($auth['success']) {

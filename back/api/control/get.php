@@ -1,8 +1,9 @@
 <?php
-require_once '../../models/Control.php';
+use PoolNET\Control;
+require_once __DIR__ . '/../../config/env.php';
 
 // Headers
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: ' . getenv('ENV_HEADERS_ALLOW_ORIGIN'));
 header('Content-Type: application/json');
 
 try {

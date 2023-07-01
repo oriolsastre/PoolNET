@@ -1,6 +1,5 @@
 <?php
-include_once __DIR__ . '/../../config/Database.php';
-include_once __DIR__ . '/../../models/Accio.php';
+use PoolNET\config\Database, PoolNET\Accio;
 
 // Headers
 header('Access-Control-Allow-Origin: *');

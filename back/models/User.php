@@ -1,6 +1,6 @@
 <?php
+namespace PoolNET;
 require_once __DIR__ . '/../config/env.php';
-require_once __DIR__ . '/Model.php';
 class User extends Model
 {
   protected static string $table = 'user';

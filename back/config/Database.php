@@ -1,5 +1,7 @@
 <?php
-include __DIR__ . '/../config/env.php';
+namespace PoolNET\config;
+use PDO, PDOException;
+require_once __DIR__ . '/../config/env.php';
 class Database
 {
   // Params

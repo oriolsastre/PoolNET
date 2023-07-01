@@ -1,5 +1,12 @@
 {
     "require": {
         "firebase/php-jwt": "^6.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "PoolNET\\": "models/",
+            "PoolNET\\config\\": "config/",
+            "PoolNET\\MW\\": "middlewares/"
+        }
     }
 }

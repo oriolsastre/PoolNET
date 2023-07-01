@@ -1,5 +1,6 @@
 <?php
-require_once __DIR__ . '/../config/Database.php';
+namespace PoolNET;
+use PDO, Exception, PoolNET\config\Database;
 
 abstract class Model
 {
