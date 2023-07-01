@@ -7,5 +7,7 @@ module.exports = {
     "constants.ts",
     "constants.example.ts",
     "jest.config.js",
+    "setup.ts",
   ],
+  globalSetup: "./setup.ts"
 };

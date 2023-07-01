@@ -33,7 +33,7 @@ class Auth extends JwtHandler
     } else {
       return [
         "success" => false,
-        "message" => "Token not found",
+        "message" => "No autoritzat",
       ];
     }
   }
