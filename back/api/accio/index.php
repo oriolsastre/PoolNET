@@ -1,11 +1,12 @@
 <?php
-require_once __DIR__ . '/../../middlewares/AuthMW.php';
-require_once __DIR__ . '/../../config/database.php';
+
+use PoolNET\config\Database;
+use PoolNET\MW\AuthMW;
 
 $database = new Database();
 $dbcnx = $database->connect();
 $headers = getallheaders();
-$authMW = new Auth($dbcnx, $headers);
+$authMW = new AuthMW($dbcnx, $headers);
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   require_once 'get.php';

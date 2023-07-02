@@ -1,8 +1,8 @@
 <?php
-require __DIR__ . '/../models/JwtHandler.php';
-require __DIR__ . '/../models/User.php';
+namespace PoolNET\MW;
+use PoolNET\JwtHandler, PoolNET\User;
 
-class Auth extends JwtHandler
+class AuthMW extends JwtHandler
 {
   protected $db;
   protected $headers;

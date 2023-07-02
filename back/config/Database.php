@@ -1,5 +1,9 @@
 <?php
-include __DIR__ . '/../config/env.php';
+namespace PoolNET\config;
+
+use PDO;
+use PDOException;
+
 class Database
 {
   // Params
@@ -11,6 +15,7 @@ class Database
 
   public function __construct()
   {
+    Env::executar();
     $this->host = getenv('ENV_DB_HOST');
     $this->db_name = getenv('ENV_DB_NAME');
     $this->user = getenv('ENV_DB_USER');

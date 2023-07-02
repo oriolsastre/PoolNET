@@ -1,11 +1,12 @@
 <?php
+require_once __DIR__ . '/../../vendor/autoload.php';
+
+use PoolNET\controller\Control;
+
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-  require_once 'get.php';
+  Control::get();
 } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  require_once 'create.php';
+  Control::post();
 } else {
-  http_response_code(405);
-  echo json_encode(
-    array('message' => 'Method not allowed')
-  );
+  Control::respostaSimple(405);
 }

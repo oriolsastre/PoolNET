@@ -1,6 +1,5 @@
 <?php
-require_once __DIR__ . '/Model.php';
-require_once __DIR__ . '/User.php';
+namespace PoolNET;
 class Control extends Model
 {
   protected static string $table = 'piscinaControl';

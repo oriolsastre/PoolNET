@@ -1,10 +1,10 @@
 <?php
+namespace PoolNET;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-
-include __DIR__ . '/../config/env.php';
+use PoolNET\config\Env;
 
 class JwtHandler
 {
@@ -16,6 +16,7 @@ class JwtHandler
 
   public function __construct()
   {
+    Env::executar();
     // set your default time-zone
     date_default_timezone_set('Europe/Berlin');
     $this->issuedAt = time();
@@ -39,7 +40,7 @@ class JwtHandler
       // Token expiration
       "exp" => $this->expire,
       // Payload
-      "data" => $data
+      "data" => $data,
     );
 
     $this->jwt = JWT::encode($this->token, $this->jwt_secrect, 'HS256');

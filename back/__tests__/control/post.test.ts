@@ -11,7 +11,7 @@ describe("Testejant l'endpoint POST de control", () => {
       const response = await req.post("/");
 
       expect(response.status).toBe(401);
-      expect(response.body.message).toBe("No autoritzat");
+      expect(response.body.error).toBe("No autoritzat");
     });
 
     it("Hauria de fallar amb credencials però sense dades enviades", async () => {
