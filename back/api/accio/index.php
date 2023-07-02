@@ -1,5 +1,7 @@
 <?php
-use PoolNET\config\Database, PoolNET\MW\AuthMW;
+
+use PoolNET\config\Database;
+use PoolNET\MW\AuthMW;
 
 $database = new Database();
 $dbcnx = $database->connect();
