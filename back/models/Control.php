@@ -1,5 +1,6 @@
 <?php
 namespace PoolNET;
+
 class Control extends Model
 {
   protected static string $table = 'piscinaControl';
@@ -15,10 +16,10 @@ class Control extends Model
   public ?int $temperatura;
   public ?int $transparent;
   public ?int $fons;
-  public ?int $usuari;   // Fa referencia a l'Id
+  public ?int $usuari; // Fa referencia a l'Id
   public ?User $user;
 
-  public function __construct(?array $data = null)
+  public function __construct( ? array $data = null)
   {
     parent::__construct($data);
     if (isset($this->usuari)) {
@@ -36,15 +37,13 @@ class Control extends Model
     return parent::crear($arrayControl);
   }
 
-  public function borrar()
-  {
-    return parent::borrarPerUnic('controlID', $this->controlID);
-  }
-  
   // GETTERS
   public function getDadesUsuari()
   {
-    if ($this->usuari == null) return false;
+    if ($this->usuari == null) {
+      return false;
+    }
+
     $this->user = User::trobarPerId($this->usuari);
     return true;
   }
@@ -69,7 +68,10 @@ class Control extends Model
   {
     foreach (get_object_vars($this) as $propietat => $valor) {
       if ($propietat != 'usuari') {
-        if (!is_null($valor)) return false;
+        if (!is_null($valor)) {
+          return false;
+        }
+
       }
     }
     return true;
