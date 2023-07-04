@@ -21,9 +21,36 @@ class Controlador
     header('Access-Control-Allow-Headers: ' . getenv('ENV_HEADERS_ALLOW_HEADERS'));
     header('Content-Type: application/json');
   }
-  protected static function parseBody( ? array $valors = null)
+  protected static function parseBody( ? array $obligatori = null)
   {
-    return json_decode(file_get_contents('php://input'), true);
+    $body = json_decode(file_get_contents('php://input'), true);
+    if ($obligatori !== null) {
+      foreach ($obligatori as $param => $tipus) {
+        if (isset($body[$param])) {
+          if (gettype($body[$param]) !== $tipus) {
+            self::respostaSimple(
+              400,
+              array(
+                "error" => "Algun camp no és del tipus correcte.",
+                "camps_obligatoris" => $obligatori,
+              ),
+              false
+            );
+          }
+        } else {
+          self::respostaSimple(
+            400,
+            array(
+              "error" => "Falta algun camp obligatori.",
+              "camps_obligatoris" => $obligatori,
+            ),
+            false
+          );
+        }
+
+      }
+    }
+    return $body;
   }
   public static function respostaSimple(int $status = 500,  ? array $response = null, bool $headers = true)
   {

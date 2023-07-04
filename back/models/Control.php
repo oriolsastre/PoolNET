@@ -37,6 +37,11 @@ class Control extends Model
     return parent::crear($arrayControl);
   }
 
+  public function borrar()
+  {
+    return parent::borrarPerId($this->controlID);
+  }
+
   // GETTERS
   public function getDadesUsuari()
   {
@@ -67,11 +72,8 @@ class Control extends Model
   public function allNull()
   {
     foreach (get_object_vars($this) as $propietat => $valor) {
-      if ($propietat != 'usuari') {
-        if (!is_null($valor)) {
-          return false;
-        }
-
+      if ($propietat != 'usuari' && !is_null($valor)) {
+        return false;
       }
     }
     return true;

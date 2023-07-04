@@ -4,6 +4,7 @@ namespace PoolNET;
 use Exception;
 use PDO;
 use PoolNET\config\Database;
+use ValueError;
 
 abstract class Model
 {
@@ -64,7 +65,7 @@ abstract class Model
   public static function trobarPerUnic(string $uniqueKey, $id)
   {
     if (!in_array($uniqueKey, static::$uniqueKeyValues)) {
-      throw new Exception('Invalid unique key', 400);
+      throw new ValueError('Invalid unique key', 400);
     }
 
     if (self::$dbcnx == null) {
@@ -154,7 +155,7 @@ abstract class Model
   private static function borrarPerUnic(string $uniqueKey, $id)
   {
     if (!in_array($uniqueKey, static::$uniqueKeyValues)) {
-      throw new Exception('Invalid unique key', 400);
+      throw new ValueError('Invalid unique key', 400);
     }
 
     if (self::$dbcnx == null) {
@@ -169,12 +170,8 @@ abstract class Model
     }
     return false;
   }
-  private static function borrarPerId(int $id)
+  protected static function borrarPerId(int $id)
   {
     return self::borrarPerUnic(static::$idKey, $id);
-  }
-  public function borrar()
-  {
-    return self::borrarPerId($this->$$idKey);
   }
 }
