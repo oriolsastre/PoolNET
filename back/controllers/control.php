@@ -1,9 +1,7 @@
 <?php
 namespace PoolNET\controller;
 
-use PoolNET\config\Database;
 use PoolNET\Control as PoolNETControl;
-use PoolNET\MW\AuthMW;
 
 class Control extends Controlador
 {
@@ -20,45 +18,52 @@ class Control extends Controlador
       parent::respostaSimple(500, array("error" => $th->getMessage()), false);
     }
   }
-
   public static function post()
   {
     parent::headers("POST");
-    // Init DB & Connect
-    $database = new Database();
-    $dbcnx = $database->connect();
+    // Get raw posted data
+    $data = parent::parseBody();
+    // Get user id from token
+    $userData = json_decode(getenv('JWT_USER_DATA'));
 
-    $authMW = new AuthMW($dbcnx);
-    $auth = $authMW->isValid();
+    // Validate
+    try {
+      $control = new PoolNETControl($data);
+      $control->usuari = $userData->userID;
+    } catch (\Throwable $th) {
+      parent::respostaSimple(400, array("error" => $th->getMessage()), false);
+    }
 
-    if ($auth['success']) {
-      // Get raw posted data
-      $data = json_decode(file_get_contents("php://input"), true);
-      // Get user id from token
-      $userID = $authMW->jwtDecodeData($_COOKIE['token'])->userID;
+    if ($control->allNull()) {
+      parent::respostaSimple(400, array("error" => "Mínim has d'omplir un camp."), false);
+    }
 
-      // Validate
-      try {
-        $control = new PoolNETControl($data);
-        $control->usuari = $userID;
-      } catch (\Throwable $th) {
-        parent::respostaSimple(400, array("error" => $th->getMessage()), false);
-        return;
-      }
-
-      if ($control->allNull()) {
-        parent::respostaSimple(400, array("error" => "Mínim has d'omplir un camp."), false);
-        return;
-      }
-
-      $controlDesat = $control->desar();
-      if ($controlDesat) {
-        parent::respostaSimple(204, null, false);
-      } else {
-        parent::respostaSimple(500, array("error" => "No s'ha pogut desar el control de l'aigua."), false);
-      }
+    $controlDesat = $control->desar();
+    if ($controlDesat) {
+      parent::respostaSimple(204, null, false);
     } else {
-      parent::respostaSimple(401, array("error" => $auth['message']), false);
+      parent::respostaSimple(500, array("error" => "No s'ha pogut desar el control de l'aigua."), false);
+    }
+  }
+  public static function delete()
+  {
+    parent::headers("DELETE");
+    try {
+      $valorsObligatoris = array('controlID' => "integer");
+      $data = parent::parseBody($valorsObligatoris);
+      $userData = json_decode(getenv('JWT_USER_DATA'));
+      $controlAEliminar = PoolNETControl::trobarPerUnic('controlID', $data['controlID']);
+      if ($controlAEliminar === null) {
+        parent::respostaSimple(404, array("error" => "No s'ha trobat el control."), false);
+      }
+      $controlAEliminar->getDadesUsuari();
+      if ($controlAEliminar->user->userID != $userData->userID && $userData->nivell > 0) {
+        parent::respostaSimple(403, array("error" => "Només pots eliminar controls propis."), false);
+      }
+      $controlAEliminar->borrar();
+      parent::respostaSimple(204, null, false);
+    } catch (\Throwable $th) {
+      parent::respostaSimple(400, array("error" => $th->getMessage()), false);
     }
   }
 }

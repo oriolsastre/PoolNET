@@ -13,14 +13,12 @@ class AuthLogin extends Controlador
 
     if (!isset($data->usuari) || !isset($data->password)) {
       parent::respostaSimple(400, array("error" => "Error amb les credencials."), false);
-      return;
     }
 
     $user = User::trobarPerUnic('usuari', $data->usuari);
 
     if (!$user || !$user->checkPswd($data->password)) {
       parent::respostaSimple(400, array("error" => "Error amb les credencials."), false);
-      return;
     }
 
     $jwt = new JwtHandler();
