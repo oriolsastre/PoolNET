@@ -20,7 +20,6 @@ abstract class Model
         if (property_exists($this, $key)) {
           $this->$key = $value;
         }
-
       }
     }
   }
@@ -134,22 +133,34 @@ abstract class Model
     throw new Exception('Error obtenint les dades. Alguna clàusula no deu ser correcta.', 400);
   }
 
-  /* protected static function update(string $table, array $data, string $idKey, $id)
+  // UPDATE/ACTUALITZAR
+  private static function updatePerUnic(array $data, string $uniqueKey, $id)
   {
-  if (self::$dbcnx == null) self::connect();
-  $valors = implode(", ", array_map(function ($k, $v) {
-  if ($v === null) return "$k = NULL";
-  return "$k = $v";
-  }, array_keys($data), $data));
-  $query = 'UPDATE ' . $table . ' SET ' . $valors . ' WHERE ' . $idKey . ' = :id';
-  $stmt = self::$dbcnx->prepare($query);
-  $stmt->bindParam(':id', $id);
-  if ($stmt->execute()) {
-  return ["success" => true];
-  }
+    if (!in_array($uniqueKey, static::$uniqueKeyValues)) {
+      throw new ValueError('Invalid unique key', 400);
+    }
+    if (self::$dbcnx == null) {
+      self::connect();
+    }
 
-  return ["success" => false];
-  } */
+    $valors = implode(", ", array_map(function ($k, $v) {
+      if ($v === null) {
+        return "$k = NULL";
+      }
+      return "$k = $v";
+    }, array_keys($data), $data));
+    $query = 'UPDATE ' . static::$table . ' SET ' . $valors . ' WHERE ' . $uniqueKey . ' = :id';
+    $stmt = self::$dbcnx->prepare($query);
+    $stmt->bindParam(':id', $id);
+    if ($stmt->execute()) {
+      return true;
+    }
+    return false;
+  }
+  protected static function updatePerId(array $data, int $id)
+  {
+    return self::updatePerUnic($data, static::$idKey, $id);
+  }
 
   // DELETE/BORRAR
   private static function borrarPerUnic(string $uniqueKey, $id)
@@ -157,7 +168,6 @@ abstract class Model
     if (!in_array($uniqueKey, static::$uniqueKeyValues)) {
       throw new ValueError('Invalid unique key', 400);
     }
-
     if (self::$dbcnx == null) {
       self::connect();
     }
