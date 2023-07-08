@@ -9,6 +9,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
   AuthMW::rutaProtegida();
   Control::post();
+} elseif ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
+  AuthMW::rutaProtegida();
+  Control::patch();
 } elseif ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
   AuthMW::rutaProtegida();
   Control::delete();

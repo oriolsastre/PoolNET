@@ -147,7 +147,7 @@ abstract class Model
       if ($v === null) {
         return "$k = NULL";
       }
-      return "$k = $v";
+      return "$k = \"$v\"";
     }, array_keys($data), $data));
     $query = 'UPDATE ' . static::$table . ' SET ' . $valors . ' WHERE ' . $uniqueKey . ' = :id';
     $stmt = self::$dbcnx->prepare($query);
@@ -180,8 +180,12 @@ abstract class Model
     }
     return false;
   }
-  protected static function borrarPerId(int $id)
+  private static function borrarPerId(int $id)
   {
     return self::borrarPerUnic(static::$idKey, $id);
+  }
+  public function borrar()
+  {
+    return self::borrarPerId($this->{static::$idKey});
   }
 }

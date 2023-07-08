@@ -8,15 +8,15 @@ class Control extends Model
   protected static array $uniqueKeyValues = ['controlID'];
 
   // Properties
-  public ?int $controlID;
-  public ?string $data_hora;
+  public ?int $controlID = null;
+  public string $data_hora;
   public ?float $ph;
   public ?float $clor;
   public ?float $alcali;
   public ?int $temperatura;
   public ?int $transparent;
   public ?int $fons;
-  public ?int $usuari; // Fa referencia a l'Id
+  public int $usuari; // Fa referencia a l'Id
   public ?User $user;
 
   public function __construct( ? array $data = null)
@@ -29,17 +29,18 @@ class Control extends Model
 
   // MÈTOODES ESTÀTICS CRUD
   // MÈTODES NO-ESTÀTICS CRUD
-
   public function desar()
   {
     $arrayControl = get_object_vars($this);
-    $arrayControl = $this->estandard($arrayControl);
-    return parent::crear($arrayControl);
-  }
-
-  public function borrar()
-  {
-    return parent::borrarPerId($this->controlID);
+    echo $this->controlID;
+    if ($this->controlID === null) {
+      $arrayControl = $this->estandard($arrayControl);
+      return parent::crear($arrayControl);
+    }
+    unset($arrayControl['controlID']);
+    unset($arrayControl['usuari']);
+    unset($arrayControl['user']);
+    return parent::updatePerId($arrayControl, $this->controlID);
   }
 
   // GETTERS
@@ -69,10 +70,11 @@ class Control extends Model
    * Comprova si totes les propietats de l'objecte són null. Per evitar desar objectes nul a la DB
    * @return bool
    */
-  public function allNull()
+  public function allNull() : bool
   {
+    $valorsNullables = array('ph', 'clor', 'alcali', 'temperatura', 'transparent', 'fons');
     foreach (get_object_vars($this) as $propietat => $valor) {
-      if ($propietat != 'usuari' && !is_null($valor)) {
+      if (in_array($propietat, $valorsNullables) && !is_null($valor)) {
         return false;
       }
     }
