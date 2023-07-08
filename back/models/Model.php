@@ -147,7 +147,7 @@ abstract class Model
       if ($v === null) {
         return "$k = NULL";
       }
-      return "$k = $v";
+      return "$k = \"$v\"";
     }, array_keys($data), $data));
     $query = 'UPDATE ' . static::$table . ' SET ' . $valors . ' WHERE ' . $uniqueKey . ' = :id';
     $stmt = self::$dbcnx->prepare($query);

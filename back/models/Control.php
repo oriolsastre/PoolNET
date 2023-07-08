@@ -9,14 +9,14 @@ class Control extends Model
 
   // Properties
   public ?int $controlID = null;
-  public ?string $data_hora;
+  public string $data_hora;
   public ?float $ph;
   public ?float $clor;
   public ?float $alcali;
   public ?int $temperatura;
   public ?int $transparent;
   public ?int $fons;
-  public ?int $usuari; // Fa referencia a l'Id
+  public int $usuari; // Fa referencia a l'Id
   public ?User $user;
 
   public function __construct( ? array $data = null)
@@ -32,6 +32,7 @@ class Control extends Model
   public function desar()
   {
     $arrayControl = get_object_vars($this);
+    echo $this->controlID;
     if ($this->controlID === null) {
       $arrayControl = $this->estandard($arrayControl);
       return parent::crear($arrayControl);
@@ -71,8 +72,9 @@ class Control extends Model
    */
   public function allNull() : bool
   {
+    $valorsNullables = array('ph', 'clor', 'alcali', 'temperatura', 'transparent', 'fons');
     foreach (get_object_vars($this) as $propietat => $valor) {
-      if ($propietat != 'usuari' && $propietat != 'user' && !is_null($valor)) {
+      if (in_array($propietat, $valorsNullables) && !is_null($valor)) {
         return false;
       }
     }

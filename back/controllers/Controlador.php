@@ -21,7 +21,7 @@ class Controlador
     header('Access-Control-Allow-Headers: ' . getenv('ENV_HEADERS_ALLOW_HEADERS'));
     header('Content-Type: application/json');
   }
-  protected static function parseBody( ? array $obligatori = null)
+  public static function parseBody( ? array $obligatori = null)
   {
     $body = json_decode(file_get_contents('php://input'), true);
     if ($obligatori !== null) {
@@ -52,7 +52,7 @@ class Controlador
     }
     return $body;
   }
-  public static function respostaSimple(int $status = 500,  ? array $response = null, bool $headers = true)
+  public static function respostaSimple(int $status = 500,  ? array $response = null, bool $headers = true) : void
   {
     switch ($status) {
       case '405' :
@@ -61,7 +61,7 @@ class Controlador
         }
         break;
 
-      default :
+      default:
         if ($response === null) {
           $response = array("error" => "Alguna cosa ha fallat");
         }

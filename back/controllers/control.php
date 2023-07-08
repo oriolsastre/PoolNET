@@ -2,6 +2,7 @@
 namespace PoolNET\controller;
 
 use PoolNET\Control as PoolNETControl;
+use PoolNET\MW\Validator;
 
 class Control extends Controlador
 {
@@ -47,10 +48,10 @@ class Control extends Controlador
   {
     parent::headers("PATCH");
     try {
-      $valorsObligatoris = array('controlID' => "integer");
-      $data = parent::parseBody($valorsObligatoris);
+      $body = parent::parseBody(array('controlID' => "integer"));
+      Validator::validateBodyWithClass($body, 'PoolNET\Control');
       $userData = json_decode(getenv('JWT_USER_DATA'));
-      $controlAEditar = PoolNETControl::trobarPerUnic('controlID', $data['controlID']);
+      $controlAEditar = PoolNETControl::trobarPerUnic('controlID', $body['controlID']);
       if ($controlAEditar === null) {
         parent::respostaSimple(404, array("error" => "No s'ha trobat el control."), false);
       }
@@ -59,14 +60,17 @@ class Control extends Controlador
         parent::respostaSimple(403, array("error" => "Només pots editar controls propis."), false);
       }
       // Editar
-      foreach ($data as $camp => $valor) {
+      foreach ($body as $camp => $valor) {
         $controlAEditar->$camp = $valor;
       }
       if ($controlAEditar->allNull()) {
         parent::respostaSimple(400, array("error" => "No pots buidar un control."), false);
       }
-      // echo $valorsObligatoris['controlID'];
-      $controlAEditar->desar();
+      if ($controlAEditar->desar()) {
+        parent::respostaSimple(204, null, false);
+      } else {
+        parent::respostaSimple(500, array("error" => "No s'ha pogut desar el control."), false);
+      }
     } catch (\Throwable $th) {
       parent::respostaSimple(400, array("error" => $th->getMessage()), false);
     }
