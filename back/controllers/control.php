@@ -30,19 +30,45 @@ class Control extends Controlador
     try {
       $control = new PoolNETControl($data);
       $control->usuari = $userData->userID;
+      if ($control->allNull()) {
+        parent::respostaSimple(400, array("error" => "Mínim has d'omplir un camp."), false);
+      }
+      $controlDesat = $control->desar();
+      if ($controlDesat) {
+        parent::respostaSimple(204, null, false);
+      } else {
+        parent::respostaSimple(500, array("error" => "No s'ha pogut desar el control de l'aigua."), false);
+      }
     } catch (\Throwable $th) {
       parent::respostaSimple(400, array("error" => $th->getMessage()), false);
     }
-
-    if ($control->allNull()) {
-      parent::respostaSimple(400, array("error" => "Mínim has d'omplir un camp."), false);
-    }
-
-    $controlDesat = $control->desar();
-    if ($controlDesat) {
-      parent::respostaSimple(204, null, false);
-    } else {
-      parent::respostaSimple(500, array("error" => "No s'ha pogut desar el control de l'aigua."), false);
+  }
+  public static function patch()
+  {
+    parent::headers("PATCH");
+    try {
+      $valorsObligatoris = array('controlID' => "integer");
+      $data = parent::parseBody($valorsObligatoris);
+      $userData = json_decode(getenv('JWT_USER_DATA'));
+      $controlAEditar = PoolNETControl::trobarPerUnic('controlID', $data['controlID']);
+      if ($controlAEditar === null) {
+        parent::respostaSimple(404, array("error" => "No s'ha trobat el control."), false);
+      }
+      $controlAEditar->getDadesUsuari();
+      if ($controlAEditar->user->userID != $userData->userID && $userData->nivell > 0) {
+        parent::respostaSimple(403, array("error" => "Només pots editar controls propis."), false);
+      }
+      // Editar
+      foreach ($data as $camp => $valor) {
+        $controlAEditar->$camp = $valor;
+      }
+      if ($controlAEditar->allNull()) {
+        parent::respostaSimple(400, array("error" => "No pots buidar un control."), false);
+      }
+      // echo $valorsObligatoris['controlID'];
+      $controlAEditar->desar();
+    } catch (\Throwable $th) {
+      parent::respostaSimple(400, array("error" => $th->getMessage()), false);
     }
   }
   public static function delete()

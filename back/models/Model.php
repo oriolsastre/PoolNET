@@ -180,8 +180,12 @@ abstract class Model
     }
     return false;
   }
-  protected static function borrarPerId(int $id)
+  private static function borrarPerId(int $id)
   {
     return self::borrarPerUnic(static::$idKey, $id);
+  }
+  public function borrar()
+  {
+    return self::borrarPerId($this->{static::$idKey});
   }
 }
