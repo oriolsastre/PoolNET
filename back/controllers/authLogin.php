@@ -9,16 +9,10 @@ class AuthLogin extends Controlador
   public static function post($body)
   {
     parent::headers("POST");
-    // if (!isset($body->usuari) || !isset($body->password)) {
-    //   parent::respostaSimple(400, array("error" => "Error amb les credencials."), false);
-    // }
-
     $user = User::trobarPerUnic('usuari', $body['usuari']);
-
     if (!$user || !$user->checkPswd($body['password'])) {
       parent::respostaSimple(400, array("error" => "Error amb les credencials."), false);
     }
-
     $jwt = new JwtHandler();
     $token = $jwt->jwtEncodeData('piscina', array(
       'userID' => $user->userID,

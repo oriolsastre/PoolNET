@@ -40,8 +40,9 @@ class Validator extends Controlador
     foreach ($body as $property => $value) {
       $classProperty = $reflector->getProperty($property);
       if (
-        ($value === null && !$classProperty->getType()->allowsNull()) ||
-        ($value !== null && get_debug_type($value) !== $classProperty->getType()->getName())
+        (($value === null && !$classProperty->getType()->allowsNull()) ||
+          ($value !== null && get_debug_type($value) !== $classProperty->getType()->getName())) &&
+        !(get_debug_type($value) == "int" && $classProperty->getType()->getName() == "float")
       ) {
         parent::respostaSimple(400, array(
           "error" => "El camp '" . $property . "' no pot ser '" . gettype($value) . "'. Hauria de ser '" . $classProperty->getType() . "'.",

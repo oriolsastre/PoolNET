@@ -52,7 +52,7 @@ describe("Testejant l'endpoint POST de control", () => {
       const body = {
         ph: 7.2,
         clor: 0.1,
-        alcali: 1.2,
+        alcali: 1,
         transparent: 1,
         temperatura: 28,
         fons: 1,
@@ -152,7 +152,7 @@ describe("Testejant l'endpoint PATCH de control", () => {
     it("Hauria de modificar un control propi", async () => {
       const body = {
         controlID: ultimControl[1].controlID,
-        ph: 8.1,
+        ph: 8,
         clor: 0.1,
         alcali: null,
         transparent: 1,
@@ -167,7 +167,7 @@ describe("Testejant l'endpoint PATCH de control", () => {
     it("L'admin hauria de poder editar un control aliè", async () => {
       const body = {
         controlID: ultimControl[1].controlID,
-        ph: 4.1,
+        ph: 4,
         clor: 3.5,
         fons: null,
       };
