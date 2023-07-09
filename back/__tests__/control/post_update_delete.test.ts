@@ -152,7 +152,7 @@ describe("Testejant l'endpoint PATCH de control", () => {
     it("Hauria de modificar un control propi", async () => {
       const body = {
         controlID: ultimControl[1].controlID,
-        ph: 8.1,
+        ph: 8,
         clor: 0.1,
         alcali: null,
         transparent: 1,
@@ -167,7 +167,7 @@ describe("Testejant l'endpoint PATCH de control", () => {
     it("L'admin hauria de poder editar un control aliè", async () => {
       const body = {
         controlID: ultimControl[1].controlID,
-        ph: 4.1,
+        ph: 4,
         clor: 3.5,
         fons: null,
       };

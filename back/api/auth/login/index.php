@@ -2,9 +2,14 @@
 require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use PoolNET\controller\AuthLogin;
+use PoolNET\MW\Validator;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  AuthLogin::post();
+  $body = Validator::parseBody(array(
+    'usuari' => "string",
+    'password' => "string",
+  ));
+  AuthLogin::post($body);
 } else {
   AuthLogin::respostaSimple(405);
 }

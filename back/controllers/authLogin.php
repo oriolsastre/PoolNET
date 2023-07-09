@@ -6,21 +6,13 @@ use PoolNET\User;
 
 class AuthLogin extends Controlador
 {
-  public static function post()
+  public static function post($body)
   {
     parent::headers("POST");
-    $data = json_decode(file_get_contents("php://input"));
-
-    if (!isset($data->usuari) || !isset($data->password)) {
+    $user = User::trobarPerUnic('usuari', $body['usuari']);
+    if (!$user || !$user->checkPswd($body['password'])) {
       parent::respostaSimple(400, array("error" => "Error amb les credencials."), false);
     }
-
-    $user = User::trobarPerUnic('usuari', $data->usuari);
-
-    if (!$user || !$user->checkPswd($data->password)) {
-      parent::respostaSimple(400, array("error" => "Error amb les credencials."), false);
-    }
-
     $jwt = new JwtHandler();
     $token = $jwt->jwtEncodeData('piscina', array(
       'userID' => $user->userID,
