@@ -1,11 +1,27 @@
 <?php
+require_once __DIR__ . '/../../vendor/autoload.php';
+
+use PoolNET\controller\Control;
+use PoolNET\MW\AuthMW;
+use PoolNET\MW\Validator;
+
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-  require_once 'get.php';
+  Control::get();
 } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
-  require_once 'create.php';
+  AuthMW::rutaProtegida();
+  $body = Validator::parseBody();
+  Validator::validateBodyWithClass($body, 'PoolNET\Control');
+  Control::post($body);
+} elseif ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
+  AuthMW::rutaProtegida();
+  $body = Validator::parseBody(['controlID' => "integer"]);
+  Validator::validateBodyWithClass($body, 'PoolNET\Control');
+  Control::patch($body);
+} elseif ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+  AuthMW::rutaProtegida();
+  $body = Validator::parseBody(['controlID' => "integer"]);
+  Validator::validateBodyWithClass($body, 'PoolNET\Control');
+  Control::delete($body);
 } else {
-  http_response_code(405);
-  echo json_encode(
-    array('message' => 'Method not allowed')
-  );
+  Control::respostaSimple(405);
 }

@@ -1,9 +1,11 @@
 <?php
-include_once __DIR__ . '/../../config/Database.php';
-include_once __DIR__ . '/../../models/Accio.php';
+
+use PoolNET\Accio;
+use PoolNET\config\Database;
+use PoolNET\config\Env;
 
 // Headers
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: ' . getenv('ENV_HEADERS_ALLOW_ORIGIN'));
 header('Content-Type: application/json');
 
 $database = new Database();
@@ -19,7 +21,7 @@ if ($num > 0) {
   $accio_array = array();
   $accio_array['data'] = array();
 
-  while($row = $result->fetch(PDO::FETCH_ASSOC)){
+  while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
     extract($row);
     $accio_item = array(
       'id' => $accioID,
@@ -33,8 +35,8 @@ if ($num > 0) {
       'aglutinant' => $aglutinant,
       'usuari' => array(
         'userID' => $userID,
-        'usuari' => $usuari
-      )
+        'usuari' => $usuari,
+      ),
     );
     array_push($accio_array['data'], $accio_item);
   }

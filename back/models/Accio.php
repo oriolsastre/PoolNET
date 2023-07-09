@@ -1,5 +1,7 @@
 <?php
-// require __DIR__ . '/User.php';
+
+namespace PoolNET;
+
 class Accio
 {
 
@@ -25,7 +27,7 @@ class Accio
 
   public function read($limit = 20)
   {
-    $query = 'SELECT '. $this->table. '.*, userID, user.usuari AS usuari FROM ' . $this->table . ' JOIN user ON ' . $this->table . '.usuari=userID ORDER BY data_hora DESC LIMIT ' . $limit;
+    $query = 'SELECT ' . $this->table . '.*, userID, user.usuari AS usuari FROM ' . $this->table . ' JOIN user ON ' . $this->table . '.usuari=userID ORDER BY data_hora DESC LIMIT ' . $limit;
 
     // Prepare statement
     $stmt = $this->dbcnx->prepare($query);
@@ -49,13 +51,13 @@ class Accio
 
     $stmt = $this->dbcnx->prepare($query);
     // Clean data
-    if($this->ph != null) $this->ph = intval($this->ph);
-    if($this->clor != null) $this->clor = intval($this->clor);
-    if($this->antialga != null) $this->antialga = intval($this->antialga);
-    if($this->fluoculant != null) $this->fluoculant = intval($this->fluoculant);
-    if($this->aspirar != null) $this->aspirar = intval($this->aspirar);
-    if($this->alcali != null) $this->alcali = intval($this->alcali);
-    if($this->aglutinant != null) $this->aglutinant = intval($this->aglutinant);
+    if ($this->ph != null) $this->ph = intval($this->ph);
+    if ($this->clor != null) $this->clor = intval($this->clor);
+    if ($this->antialga != null) $this->antialga = intval($this->antialga);
+    if ($this->fluoculant != null) $this->fluoculant = intval($this->fluoculant);
+    if ($this->aspirar != null) $this->aspirar = intval($this->aspirar);
+    if ($this->alcali != null) $this->alcali = intval($this->alcali);
+    if ($this->aglutinant != null) $this->aglutinant = intval($this->aglutinant);
     $this->usuari = intval($this->usuari);
 
     // Bind data
