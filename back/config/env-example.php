@@ -4,7 +4,11 @@ namespace PoolNET\config;
 
 class Env
 {
-  public static function executar()
+  /**
+   * Aplica les variables d'entorn
+   * @return void S'han aplicat les variables i es poden recuperar amb ``getenv()``
+   */
+  public static function executar(): void
   {
     putenv('ENV_DB_HOST=localhost');
     putenv('ENV_DB_NAME=PoolNET');

@@ -6,20 +6,24 @@ use PoolNET\User;
 
 class AuthLogin extends Controlador
 {
-  public static function post($body)
+  /**
+   * @param array<string, mixed> $body El cos de la petició
+   * @return void
+   */
+  public static function post(array $body): void
   {
     parent::headers("POST");
     $user = User::trobarPerUnic('usuari', $body['usuari']);
     if (!$user || !$user->checkPswd($body['password'])) {
-      parent::respostaSimple(400, array("error" => "Error amb les credencials."), false);
+      parent::respostaSimple(400, ["error" => "Error amb les credencials."], false);
     }
     $jwt = new JwtHandler();
-    $token = $jwt->jwtEncodeData('piscina', array(
+    $token = $jwt->jwtEncodeData('piscina', [
       'userID' => $user->userID,
       'usuari' => $user->usuari,
       'nivell' => $user->nivell,
       'email' => $user->getPrivateEmail(),
-    ));
+    ]);
 
     http_response_code(200);
     setcookie("token", $token, [
@@ -29,8 +33,7 @@ class AuthLogin extends Controlador
       // "secure" => true, // Només disponible a través de HTTPS
       "samesite" => "Strict", // Només disponible per al mateix lloc (no cross-site)
     ]);
-    echo json_encode(
-      array("token" => $token)
-    );
+    echo json_encode(["token" => $token]);
+    exit;
   }
 }

@@ -7,36 +7,37 @@ use PDOException;
 class Database
 {
   // Params
-  private $host;
-  private $db_name;
-  private $user;
-  private $password;
-  private $dbcnx;
+  private string $host;
+  private string $dbName;
+  private string $user;
+  private string $password;
+  private ?PDO $dbcnx;
 
   public function __construct()
   {
     Env::executar();
-    $this->host = getenv('ENV_DB_HOST');
-    $this->db_name = getenv('ENV_DB_NAME');
-    $this->user = getenv('ENV_DB_USER');
-    $this->password = getenv('ENV_DB_PSWD');
+    $this->host = (string) getenv('ENV_DB_HOST');
+    $this->dbName = (string) getenv('ENV_DB_NAME');
+    $this->user = (string) getenv('ENV_DB_USER');
+    $this->password = (string) getenv('ENV_DB_PSWD');
   }
-  // DB connect
-  public function connect()
+  /**
+   * Connecta a la base de dades
+   * @return PDO La connexió a la base de dades
+   */
+  public function connect(): PDO
   {
-    $this->dbcnx = null;
     try {
       $this->dbcnx = new PDO(
-        'mysql:host=' . $this->host . ';dbname=' . $this->db_name,
+        'mysql:host=' . $this->host . ';dbname=' . $this->dbName,
         $this->user,
-        $this->password
+        $this->password,
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]// Això per poder capturar errors diria.
       );
-      // Això per poder capturar errors diria.
-      $this->dbcnx->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $err) {
       echo 'Database connection failed: ' . $err->getMessage();
+      return null;
     }
-
     return $this->dbcnx;
   }
 }

@@ -29,10 +29,13 @@ class Control extends Model
 
   // MÈTOODES ESTÀTICS CRUD
   // MÈTODES NO-ESTÀTICS CRUD
-  public function desar()
+  /**
+   * Desa a la base de dades el control actual. Si no conté ID es crearà un control nou a la base de dades. Si ja conté una ID, s'actualitzarà el control a la base de dades.
+   * @return bool ``true`` si s'ha desat correctament, ``false`` en cas contrari.
+   */
+  public function desar() : bool
   {
     $arrayControl = get_object_vars($this);
-    echo $this->controlID;
     if ($this->controlID === null) {
       $arrayControl = $this->estandard($arrayControl);
       return parent::crear($arrayControl);
@@ -42,37 +45,39 @@ class Control extends Model
     unset($arrayControl['user']);
     return parent::updatePerId($arrayControl, $this->controlID);
   }
-
   // GETTERS
-  public function getDadesUsuari()
+  /**
+   * Obté les dades de l'usuari que ha realitzat el control.
+   * @return bool ``true`` si s'han obtingut correctament les dades, ``false`` en cas contrari.
+   */
+  public function getDadesUsuari(): bool
   {
     if ($this->usuari == null) {
       return false;
     }
-
     $this->user = User::trobarPerId($this->usuari);
     return true;
   }
-
   // ALTRES MÈTODES
   /**
-   * Estandarditza les propietats de l'objecte per a ser creat. Eliminar aquelles columnes que tenen valor per defecte a la DB. O bé la propietat user que és l'objecte relacionat..
+   * Estandarditza les propietats de l'objecte per a ser creat. Eliminar aquelles columnes que tenen valor per defecte a la DB. O bé la propietat user que és l'objecte relacionat.
+   * @param array<string, mixed> $data Dades a estandarditzar.
+   * @return array<string, mixed>
    */
-  private function estandard(array $data)
+  private function estandard(array $data): array
   {
     unset($data['controlID']);
     unset($data['data_hora']);
     unset($data['user']);
     return $data;
   }
-
   /**
-   * Comprova si totes les propietats de l'objecte són null. Per evitar desar objectes nul a la DB
+   * Comprova si totes les propietats nul·lables de l'objecte són null. Per evitar desar objectes buits a la DB.
    * @return bool
    */
-  public function allNull() : bool
+  public function allNull(): bool
   {
-    $valorsNullables = array('ph', 'clor', 'alcali', 'temperatura', 'transparent', 'fons');
+    $valorsNullables = ['ph', 'clor', 'alcali', 'temperatura', 'transparent', 'fons'];
     foreach (get_object_vars($this) as $propietat => $valor) {
       if (in_array($propietat, $valorsNullables) && !is_null($valor)) {
         return false;
