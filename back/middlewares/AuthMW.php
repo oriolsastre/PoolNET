@@ -7,46 +7,50 @@ use PoolNET\User;
 
 class AuthMW extends Controlador
 {
-  private static $jwt = null;
-  private static function initJwtHandler()
+  private static ?JwtHandler $jwt = null;
+  /**
+   * Inicia el JWTHandler
+   * @return void
+   */
+  private static function initJwtHandler(): void
   {
     self::$jwt = new JwtHandler();
   }
-  private static function isValid()
+  /**
+   * Valida el token rebut a la cookie de la petició.
+   * @return boolean
+   */
+  private static function isValid(): bool
   {
-    if (isset($_COOKIE['token'])) {
-      if (self::$jwt === null) {
-        self::initJwtHandler();
-      }
-      $data = self::$jwt->jwtDecodeData($_COOKIE['token']);
-      if (isset($data->userID)) {
-        $user = User::trobarPerId($data->userID);
-        if ($user != null) {
-          return [
-            "success" => true,
-          ];
-        }
-      }
-      return [
-        "success" => false,
-        "message" => $data,
-      ];
-    } else {
-      return [
-        "success" => false,
-        "message" => "No autoritzat",
-      ];
+    if (!isset($_COOKIE['token'])) {
+      return false;
     }
+    if (self::$jwt === null) {
+      self::initJwtHandler();
+    }
+    $data = self::$jwt->jwtDecodeData($_COOKIE['token']);
+    if (!isset($data->userID)) {
+      return false;
+    }
+    $user = User::trobarPerId((int) $data->userID);
+    if ($user === null) {
+      return false;
+    }
+    return true;
+
   }
-  public static function rutaProtegida()
+  /**
+   * Comprova el token rebut a les cookies de la petició i permet seguir si aquest és vàlid. Si no, atura la petició amb un 401.
+   * @return void Les dades de l'usuari són afegides a la variable d'entorn JWT_USER_DATA
+   */
+  public static function rutaProtegida(): void
   {
     if (parent::$dbcnx === null) {
       parent::connect();
     }
-    $auth = self::isValid();
-    if ($auth['success'] === false) {
-      self::respostaSimple(401, array("error" => $auth['message']), true);
-      exit;
+
+    if (!self::isValid()) {
+      self::respostaSimple(401, ["error" => "No autoritzat"], true);
     }
     if (self::$jwt === null) {
       self::initJwtHandler();

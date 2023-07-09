@@ -6,7 +6,12 @@ use ReflectionClass;
 
 class Validator extends Controlador
 {
-  public static function parseBody( ? array $obligatori = null)
+  /**
+   * Parseja el cos de la petició i el retorna com a array.
+   * @param array<string, mixed>|null $obligatori [Opcional] Valors necessaris que han der ser al cos de la petició i el seu tipus. Per exemple, ``['controlID' => 'integer']``.
+   * @return array Cos de la petició parsejat.
+   */
+  public static function parseBody( ? array $obligatori = null) : array
   {
     $body = json_decode(file_get_contents('php://input'), true);
     if ($obligatori !== null) {
@@ -15,26 +20,32 @@ class Validator extends Controlador
           if (gettype($body[$param]) !== $tipus) {
             self::respostaSimple(
               400,
-              array(
+              [
                 "error" => "Algun camp no és del tipus correcte.",
                 "camps_obligatoris" => $obligatori,
-              ),
+              ],
             );
           }
         } else {
           self::respostaSimple(
             400,
-            array(
+            [
               "error" => "Falta algun camp obligatori.",
               "camps_obligatoris" => $obligatori,
-            ),
+            ],
           );
         }
       }
     }
     return $body;
   }
-  public static function validateBodyWithClass(array $body, string $class) : void
+  /**
+   * Valida els valors del cos de la petició amb els tipus que admet la classe passada com a paràmetre.
+   * @param array<string, mixed> $body El cos de la petició.
+   * @param string $class Classe que ha de validar els paràmetres.
+   * @return void Respon amb 400 si algun valor no és compatible.
+   */
+  public static function validateBodyWithClass(array $body, string $class): void
   {
     $reflector = new ReflectionClass($class);
     foreach ($body as $property => $value) {
@@ -44,9 +55,9 @@ class Validator extends Controlador
           ($value !== null && get_debug_type($value) !== $classProperty->getType()->getName())) &&
         !(get_debug_type($value) == "int" && $classProperty->getType()->getName() == "float")
       ) {
-        parent::respostaSimple(400, array(
+        parent::respostaSimple(400, [
           "error" => "El camp '" . $property . "' no pot ser '" . gettype($value) . "'. Hauria de ser '" . $classProperty->getType() . "'.",
-        ));
+        ]);
       }
     }
   }
