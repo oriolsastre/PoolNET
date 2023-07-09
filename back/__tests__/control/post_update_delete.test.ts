@@ -52,7 +52,7 @@ describe("Testejant l'endpoint POST de control", () => {
       const body = {
         ph: 7.2,
         clor: 0.1,
-        alcali: 1,
+        alcali: 1.2,
         transparent: 1,
         temperatura: 28,
         fons: 1,

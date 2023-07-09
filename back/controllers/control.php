@@ -2,7 +2,6 @@
 namespace PoolNET\controller;
 
 use PoolNET\Control as PoolNETControl;
-use PoolNET\MW\Validator;
 
 class Control extends Controlador
 {
@@ -19,17 +18,14 @@ class Control extends Controlador
       parent::respostaSimple(500, array("error" => $th->getMessage()), false);
     }
   }
-  public static function post()
+  public static function post($body)
   {
     parent::headers("POST");
-    // Get raw posted data
-    $data = parent::parseBody();
     // Get user id from token
     $userData = json_decode(getenv('JWT_USER_DATA'));
 
-    // Validate
     try {
-      $control = new PoolNETControl($data);
+      $control = new PoolNETControl($body);
       $control->usuari = $userData->userID;
       if ($control->allNull()) {
         parent::respostaSimple(400, array("error" => "Mínim has d'omplir un camp."), false);
@@ -44,12 +40,10 @@ class Control extends Controlador
       parent::respostaSimple(400, array("error" => $th->getMessage()), false);
     }
   }
-  public static function patch()
+  public static function patch($body)
   {
     parent::headers("PATCH");
     try {
-      $body = parent::parseBody(array('controlID' => "integer"));
-      Validator::validateBodyWithClass($body, 'PoolNET\Control');
       $userData = json_decode(getenv('JWT_USER_DATA'));
       $controlAEditar = PoolNETControl::trobarPerUnic('controlID', $body['controlID']);
       if ($controlAEditar === null) {
@@ -75,14 +69,12 @@ class Control extends Controlador
       parent::respostaSimple(400, array("error" => $th->getMessage()), false);
     }
   }
-  public static function delete()
+  public static function delete($body)
   {
     parent::headers("DELETE");
     try {
-      $valorsObligatoris = array('controlID' => "integer");
-      $data = parent::parseBody($valorsObligatoris);
       $userData = json_decode(getenv('JWT_USER_DATA'));
-      $controlAEliminar = PoolNETControl::trobarPerUnic('controlID', $data['controlID']);
+      $controlAEliminar = PoolNETControl::trobarPerUnic('controlID', $body['controlID']);
       if ($controlAEliminar === null) {
         parent::respostaSimple(404, array("error" => "No s'ha trobat el control."), false);
       }

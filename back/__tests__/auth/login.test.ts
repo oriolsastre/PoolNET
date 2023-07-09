@@ -26,7 +26,7 @@ describe("Testejant l'endpoint de login", () => {
       const response = await req.post(`/login/`);
 
       expect(response.status).toBe(400);
-      expect(response.body.error).toBe("Error amb les credencials.");
+      expect(response.body.error).toBe("Falta algun camp obligatori.");
     });
   });
 });

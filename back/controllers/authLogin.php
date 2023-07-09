@@ -6,18 +6,16 @@ use PoolNET\User;
 
 class AuthLogin extends Controlador
 {
-  public static function post()
+  public static function post($body)
   {
     parent::headers("POST");
-    $data = json_decode(file_get_contents("php://input"));
+    // if (!isset($body->usuari) || !isset($body->password)) {
+    //   parent::respostaSimple(400, array("error" => "Error amb les credencials."), false);
+    // }
 
-    if (!isset($data->usuari) || !isset($data->password)) {
-      parent::respostaSimple(400, array("error" => "Error amb les credencials."), false);
-    }
+    $user = User::trobarPerUnic('usuari', $body['usuari']);
 
-    $user = User::trobarPerUnic('usuari', $data->usuari);
-
-    if (!$user || !$user->checkPswd($data->password)) {
+    if (!$user || !$user->checkPswd($body['password'])) {
       parent::respostaSimple(400, array("error" => "Error amb les credencials."), false);
     }
 

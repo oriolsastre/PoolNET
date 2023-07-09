@@ -3,18 +3,25 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 
 use PoolNET\controller\Control;
 use PoolNET\MW\AuthMW;
+use PoolNET\MW\Validator;
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   Control::get();
 } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
   AuthMW::rutaProtegida();
-  Control::post();
+  $body = Validator::parseBody();
+  Validator::validateBodyWithClass($body, 'PoolNET\Control');
+  Control::post($body);
 } elseif ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
   AuthMW::rutaProtegida();
-  Control::patch();
+  $body = Validator::parseBody(array('controlID' => "integer"));
+  Validator::validateBodyWithClass($body, 'PoolNET\Control');
+  Control::patch($body);
 } elseif ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
   AuthMW::rutaProtegida();
-  Control::delete();
+  $body = Validator::parseBody(array('controlID' => "integer"));
+  Validator::validateBodyWithClass($body, 'PoolNET\Control');
+  Control::delete($body);
 } else {
   Control::respostaSimple(405);
 }
