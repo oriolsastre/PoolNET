@@ -1,0 +1,49 @@
+name: Backend on Pull Request
+on:
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths: "back/**"
+    types: [opened, synchronize, reopened]
+jobs:
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup PHP with Xdebug
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.1"
+          coverage: xdebug
+      - name: Install dependencies with composer
+        run: |
+          cd ${{ github.workspace }}/back
+          composer update --no-ansi --no-interaction --no-progress
+      - name: Rename env-example to env
+        run: |
+          cd ${{ github.workspace }}/back/config
+          mv env-example.php Env.php
+          cd ${{ github.workspace }}/back
+          composer dump-autoload
+      - name: Run tests with phpunit/phpunit
+        run: |
+          cd ${{ github.workspace }}/back
+          vendor/bin/phpunit __tests__ --coverage-clover=coverage.xml --log-junit=execution.xml
+      # - name: Fix code coverage paths
+      #   run: |
+      #     sed -i 's@'$GITHUB_WORKSPACE'@/home/runner/work/PoolNET/PoolNET@g' ${{ github.workspace }}/back/coverage.xml
+      #     sed -i 's@'$GITHUB_WORKSPACE'@/home/runner/work/PoolNET/PoolNET@g' ${{ github.workspace }}/back/execution.xml
+      - name: See coverage
+        run: |
+          cd ${{ github.workspace }}/back
+          cat coverage.xml
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}

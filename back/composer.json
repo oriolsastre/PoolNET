@@ -9,5 +9,8 @@
             "PoolNET\\MW\\": "middlewares/",
             "PoolNET\\controller\\": "controllers/"
         }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.2"
     }
 }
