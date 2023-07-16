@@ -1,6 +1,6 @@
 <?php
 
-namespace PoolNET\config;
+namespace PoolNET\error;
 
 use ValueError;
 

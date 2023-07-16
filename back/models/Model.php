@@ -4,7 +4,7 @@ namespace PoolNET;
 use Exception;
 use PDO;
 use PoolNET\config\Database;
-use PoolNET\config\InvalidUniqueKey;
+use PoolNET\error\InvalidUniqueKey;
 
 /**
  * Classe abastracta model. Mètodes per connectar un model a la base de dades.

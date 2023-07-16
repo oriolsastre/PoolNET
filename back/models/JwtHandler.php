@@ -5,6 +5,7 @@ use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use PoolNET\config\Env;
+use PoolNET\error\InvalidJwtToken;
 use stdClass;
 
 class JwtHandler
@@ -46,6 +47,7 @@ class JwtHandler
    * Decodifica un JWT
    * @param string $jwt_token JWT a decodificar
    * @return stdClass Les dades codificades al JWT
+   * @throws InvalidJwtToken
    */
   public function jwtDecodeData(string $jwt_token): stdClass
   {
@@ -53,7 +55,7 @@ class JwtHandler
       $decode = JWT::decode($jwt_token, new Key($this->jwt_secrect, 'HS256'));
       return $decode->data;
     } catch (Exception $e) {
-      return $e->getMessage();
+      throw new InvalidJwtToken();
     }
   }
 }
