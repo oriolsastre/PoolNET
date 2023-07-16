@@ -11,7 +11,6 @@
          failOnWarning="true">
     <source restrictDeprecations="true" restrictNotices="true" restrictWarnings="true">
         <include>
-            <directory>api</directory>
             <directory>config</directory>
             <directory>controllers</directory>
             <directory>middlewares</directory>
@@ -24,9 +23,8 @@
         </report>
     </coverage>
     <testsuites>
-        <testsuite name="JwtHandler">
-            <file>models/JwtHandler.php</file>
-            <directory>__tests__/models</directory>
+        <testsuite name="tests">
+            <directory>__tests__</directory>
         </testsuite>
     </testsuites>
 </phpunit>
