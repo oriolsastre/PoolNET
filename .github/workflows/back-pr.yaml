@@ -10,11 +10,20 @@ jobs:
   tests:
     name: Tests
     runs-on: ubuntu-latest
+    env:
+      DB_DATABASE: PoolNET
+      DB_USER: root
+      DB_PASSWORD: root
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Set up MySQL
+        run: |
+          sudo /etc/init.d/mysql start
+          mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
       - name: Setup PHP with Xdebug
         uses: shivammathur/setup-php@v2
         with:
