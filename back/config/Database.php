@@ -23,9 +23,9 @@ class Database
   }
   /**
    * Connecta a la base de dades
-   * @return PDO La connexió a la base de dades
+   * @return PDO|null La connexió a la base de dades
    */
-  public function connect(): PDO
+  public function connect(): PDO|null
   {
     try {
       $this->dbcnx = new PDO(
