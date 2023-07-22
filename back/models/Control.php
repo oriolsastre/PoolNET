@@ -10,14 +10,14 @@ class Control extends Model
   // Properties
   public ?int $controlID = null;
   public string $data_hora;
-  public ?float $ph;
-  public ?float $clor;
-  public ?float $alcali;
-  public ?int $temperatura;
-  public ?int $transparent;
-  public ?int $fons;
-  public int $usuari; // Fa referencia a l'Id
-  public ?User $user;
+  public ?float $ph = null;
+  public ?float $clor = null;
+  public ?float $alcali = null;
+  public ?int $temperatura = null;
+  public ?int $transparent = null;
+  public ?int $fons = null;
+  public ?int $usuari = null; // Fa referencia a l'Id
+  public ?User $user = null;
 
   public function __construct( ? array $data = null)
   {
@@ -25,6 +25,7 @@ class Control extends Model
     if (isset($this->usuari)) {
       $this->getDadesUsuari();
     }
+    $this->data_hora = $this->data_hora ?? date('Y-m-d H:i:s');
   }
 
   // MÈTOODES ESTÀTICS CRUD
@@ -52,10 +53,14 @@ class Control extends Model
    */
   public function getDadesUsuari(): bool
   {
-    if ($this->usuari == null) {
+    if ($this->usuari === null) {
       return false;
     }
-    $this->user = User::trobarPerId($this->usuari);
+    $searchUser = User::trobarPerId($this->usuari);
+    if (!$searchUser) {
+      return false;
+    }
+    $this->user = $searchUser;
     return true;
   }
   // ALTRES MÈTODES
