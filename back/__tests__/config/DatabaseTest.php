@@ -50,8 +50,9 @@ class DatabaseTest extends TestCase
     // Testejant l'error
     $reflectedDB = new ReflectionClass('PoolNET\config\Database');
     $instance = (object) $reflectedDB->newInstance();
-    $reflectedDB->getProperty('host')->setValue($instance, 'invalidHost');
+    $reflectedDB->getProperty('dbName')->setValue($instance, 'invalidHost');
     $dbcnx2 = $instance->connect();
+    $this->expectOutputRegex('/^Database connection failed:/');
     $this->assertNull($dbcnx2);
 
   }

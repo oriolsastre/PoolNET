@@ -24,6 +24,12 @@ jobs:
         run: |
           sudo /etc/init.d/mysql start
           mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
+      - name: Build/Seed database
+        run: mysql -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }} ${{ env.DB_DATABASE }} < ${{ github.workspace }}/back/config/database.sql
+      - name: Rename env-example to env
+        run: |
+          cd ${{ github.workspace }}/back/config
+          mv env-example.php Env.php
       - name: Setup PHP with Xdebug
         uses: shivammathur/setup-php@v2
         with:
@@ -33,12 +39,6 @@ jobs:
         run: |
           cd ${{ github.workspace }}/back
           composer update --no-ansi --no-interaction --no-progress
-      - name: Rename env-example to env
-        run: |
-          cd ${{ github.workspace }}/back/config
-          mv env-example.php Env.php
-          cd ${{ github.workspace }}/back
-          composer dump-autoload
       - name: Run tests with phpunit/phpunit
         run: |
           cd ${{ github.workspace }}/back
@@ -47,10 +47,6 @@ jobs:
       #   run: |
       #     sed -i 's@'$GITHUB_WORKSPACE'@/home/runner/work/PoolNET/PoolNET@g' ${{ github.workspace }}/back/coverage.xml
       #     sed -i 's@'$GITHUB_WORKSPACE'@/home/runner/work/PoolNET/PoolNET@g' ${{ github.workspace }}/back/execution.xml
-      - name: See coverage
-        run: |
-          cd ${{ github.workspace }}/back
-          cat coverage.xml
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
