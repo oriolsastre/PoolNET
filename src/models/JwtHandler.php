@@ -4,7 +4,6 @@ namespace PoolNET;
 use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use PoolNET\config\Env;
 use PoolNET\error\InvalidJwtToken;
 use stdClass;
 
@@ -16,7 +15,6 @@ class JwtHandler
 
   public function __construct()
   {
-    Env::executar();
     date_default_timezone_set('Europe/Berlin');
     $this->issuedAt = time();
     // Token Validity (3600 second = 1hr)

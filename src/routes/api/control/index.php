@@ -1,6 +1,4 @@
 <?php
-require_once __DIR__ . '/../../vendor/autoload.php';
-
 use PoolNET\controller\Control;
 use PoolNET\MW\AuthMW;
 use PoolNET\MW\Validator;
