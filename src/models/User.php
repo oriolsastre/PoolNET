@@ -2,8 +2,6 @@
 
 namespace PoolNET;
 
-use PoolNET\config\Env;
-
 class User extends Model
 {
   protected static string $table = 'user';
@@ -38,7 +36,6 @@ class User extends Model
    */
   public function checkPswd(string $password): bool
   {
-    Env::executar();
     $hash2 = md5(getenv('ENV_ServerSalt') . $this->salt . $password);
     return $hash2 === $this->hash;
   }

@@ -4,7 +4,6 @@ namespace PoolNET\controller;
 
 use PDO;
 use PoolNET\config\Database;
-use PoolNET\config\Env;
 
 class Controlador
 {
@@ -24,7 +23,6 @@ class Controlador
    */
   protected static function headers(?string $allowMethod = "GET"): void
   {
-    Env::executar();
     header('Access-Control-Allow-Origin: ' . (string) getenv('ENV_HEADERS_ALLOW_ORIGIN'));
     header('Access-Control-Allow-Methods: ' . $allowMethod);
     header('Access-Control-Allow-Headers: ' . (string) getenv('ENV_HEADERS_ALLOW_HEADERS'));
@@ -37,7 +35,7 @@ class Controlador
    * @param bool $headers Si cal aplicar o no capceleres.
    * @return void
    */
-  public static function respostaSimple(int $status = 500,  ? array $response = null, bool $headers = true) : void
+  public static function respostaSimple(int $status = 500, ?array $response = null, bool $headers = true): void
   {
     switch ($status) {
       case 405:

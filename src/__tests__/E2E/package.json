@@ -1,5 +1,5 @@
 {
-  "name": "poolnet-back",
+  "name": "poolnet",
   "version": "1.0.0",
   "description": "Backend de PoolNET. Tests.",
   "main": "index.js",
