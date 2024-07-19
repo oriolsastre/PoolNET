@@ -15,7 +15,6 @@ class Database
 
   public function __construct()
   {
-    Env::executar();
     $this->host = (string) getenv('ENV_DB_HOST');
     $this->dbName = (string) getenv('ENV_DB_NAME');
     $this->user = (string) getenv('ENV_DB_USER');
@@ -25,7 +24,7 @@ class Database
    * Connecta a la base de dades
    * @return PDO|null La connexió a la base de dades
    */
-  public function connect(): PDO|null
+  public function connect(): PDO | null
   {
     try {
       $this->dbcnx = new PDO(

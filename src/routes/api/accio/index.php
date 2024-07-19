@@ -1,5 +1,4 @@
 <?php
-
 use PoolNET\config\Database;
 use PoolNET\MW\AuthMW;
 

@@ -1,12 +1,24 @@
 API senzilla.
 
+## Install
+
+Per a instal·lar dependències:
+
+`composer update`
+
+Per a acutalitzar l'autoload:
+
+`composer dump-autoload`
+
+Fer còpies de `env-example.php` i `.htaccess-example`.
+
 ## Tests
 
 Fer anar els tests amb
 
 `./vendor/bin/phpunit --testdox __tests__`
 
-## Docs
+# Docs
 
 Hi ha 3 endpoints, 1 de login i els altres dos per a funcionalitats CRUD d'accions i controls sobre l'aigua.
 
