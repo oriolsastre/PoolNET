@@ -1,5 +1,6 @@
 <?php declare (strict_types = 1);
 use PHPUnit\Framework\TestCase;
+use PoolNET\config\Env;
 use PoolNET\JwtHandler;
 
 /**
@@ -7,6 +8,10 @@ use PoolNET\JwtHandler;
  */
 class JwtHandlerTest extends TestCase
 {
+  public function setUp(): void
+  {
+    Env::executar();
+  }
   /**
    * @covers \PoolNET\JwtHandler::__construct
    * @uses \PoolNET\config\Env

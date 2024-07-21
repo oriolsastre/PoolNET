@@ -1,18 +1,24 @@
 <?php declare (strict_types = 1);
 use PHPUnit\Framework\TestCase;
 use PoolNET\config\Database;
+use PoolNET\config\Env;
 
-/** 
+/**
  * @covers \PoolNET\config\Database
  */
 class DatabaseTest extends TestCase
 {
+  public function setUp(): void
+  {
+    Env::executar();
+  }
   /**
    * @covers \PoolNET\config\Database::__construct
    * @uses \PoolNET\config\Env
    */
   public function testConstructor(): void
   {
+    Env::executar();
     $database = new Database();
     $this->assertInstanceOf(Database::class, $database);
     $reflectedDB = new ReflectionObject($database);
@@ -25,7 +31,7 @@ class DatabaseTest extends TestCase
     $reflectedDB->getProperty('password')->setAccessible(true);
     $this->assertSame(getenv('ENV_DB_PSWD'), $reflectedDB->getProperty('password')->getValue($database));
   }
-   /**
+  /**
    * @coversNothing
    * @doesNotPerformAssertions
    */
@@ -50,8 +56,9 @@ class DatabaseTest extends TestCase
     // Testejant l'error
     $reflectedDB = new ReflectionClass('PoolNET\config\Database');
     $instance = (object) $reflectedDB->newInstance();
-    $reflectedDB->getProperty('host')->setValue($instance, 'invalidHost');
+    $reflectedDB->getProperty('dbName')->setValue($instance, 'invalidHost');
     $dbcnx2 = $instance->connect();
+    $this->expectOutputRegex('/^Database connection failed:/');
     $this->assertNull($dbcnx2);
 
   }

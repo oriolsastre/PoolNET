@@ -24,7 +24,7 @@ abstract class Model
    * Constructor
    * @param array<string, mixed> $data
    */
-  public function __construct( ? array $data = null)
+  public function __construct(?array $data = null)
   {
     if ($data != null) {
       foreach ($data as $key => $value) {
@@ -39,7 +39,7 @@ abstract class Model
    * Connecta a la base de dades.
    * @return void
    */
-  private static function connect() : void
+  private static function connect(): void
   {
     $database = new Database();
     self::$dbcnx = $database->connect();
@@ -111,7 +111,7 @@ abstract class Model
    * @return static[]|null Array d'instàncies que compleixen les condicions.
    * @throws Exception Si falla alguna cosa.
    */
-  public static function trobarMolts( ? array $condicions = null, int $limit = 20) :  ? array
+  public static function trobarMolts(?array $condicions = null, int $limit = 20): ?array
   {
     if (static::$dbcnx === null) {
       self::connect();
@@ -155,7 +155,7 @@ abstract class Model
    * @return bool ``true`` si s'ha actualitzat correctament, ``false`` en cas contrari.
    * @throws InvalidUniqueKey Si no existeix l'identificador únic.
    */
-  private static function updatePerUnic(array $data, string $uniqueKey, $id) : bool
+  private static function updatePerUnic(array $data, string $uniqueKey, $id): bool
   {
     if (!in_array($uniqueKey, static::$uniqueKeyValues)) {
       throw new InvalidUniqueKey();
