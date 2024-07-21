@@ -1,5 +1,6 @@
 <?php declare (strict_types = 1);
 use PHPUnit\Framework\TestCase;
+use PoolNET\config\Env;
 use PoolNET\Control;
 
 /**
@@ -10,6 +11,10 @@ use PoolNET\Control;
  */
 class ControlTest extends TestCase
 {
+  public function setUp(): void
+  {
+    Env::executar();
+  }
   /**
    * @covers \PoolNET\Control::__construct
    * @cover \PoolNET\Model::__construct
