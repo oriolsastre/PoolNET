@@ -1,13 +1,13 @@
 <?php
-
-namespace PoolNET;
-
-class Accio
+require_once __DIR__ . '/Model.php';
+require_once __DIR__ . '/User.php';
+class Accio extends Model
 {
+  protected static string $table = 'piscinaAccio';
+  protected static string $idKey = 'accioID';
+  protected static array $uniqueKeyValues = ['accioID'];
 
-  private $dbcnx;
-  private $table = 'piscinaAccio';
-
+  // Properties
   public ?int $accioID;
   public ?string $data_hora;
   public ?int $ph;
@@ -20,60 +20,66 @@ class Accio
   public ?int $usuari;
   public ?User $user;
 
-  public function __construct($db)
+  public function __construct(?array $data = null)
   {
-    $this->dbcnx = $db;
-  }
-
-  public function read($limit = 20)
-  {
-    $query = 'SELECT ' . $this->table . '.*, userID, user.usuari AS usuari FROM ' . $this->table . ' JOIN user ON ' . $this->table . '.usuari=userID ORDER BY data_hora DESC LIMIT ' . $limit;
-
-    // Prepare statement
-    $stmt = $this->dbcnx->prepare($query);
-    // Execute query
-    $stmt->execute();
-
-    return $stmt;
-  }
-
-  public function create()
-  {
-    $query = 'INSERT INTO ' . $this->table . ' SET
-      ph = :ph,
-      clor = :clor,
-      antialga = :antialga,
-      fluoculant = :fluoculant,
-      aspirar = :aspirar,
-      alcali = :alcali,
-      aglutinant = :aglutinant,
-      usuari = :usuari';
-
-    $stmt = $this->dbcnx->prepare($query);
-    // Clean data
-    if ($this->ph != null) $this->ph = intval($this->ph);
-    if ($this->clor != null) $this->clor = intval($this->clor);
-    if ($this->antialga != null) $this->antialga = intval($this->antialga);
-    if ($this->fluoculant != null) $this->fluoculant = intval($this->fluoculant);
-    if ($this->aspirar != null) $this->aspirar = intval($this->aspirar);
-    if ($this->alcali != null) $this->alcali = intval($this->alcali);
-    if ($this->aglutinant != null) $this->aglutinant = intval($this->aglutinant);
-    $this->usuari = intval($this->usuari);
-
-    // Bind data
-    $stmt->bindParam(':ph', $this->ph);
-    $stmt->bindParam(':clor', $this->clor);
-    $stmt->bindParam(':antialga', $this->antialga);
-    $stmt->bindParam(':fluoculant', $this->fluoculant);
-    $stmt->bindParam(':aspirar', $this->aspirar);
-    $stmt->bindParam(':alcali', $this->alcali);
-    $stmt->bindParam(':aglutinant', $this->aglutinant);
-    $stmt->bindParam(':usuari', $this->usuari);
-    // Execute query
-    if ($stmt->execute()) {
-      return true;
+    parent::__construct($data);
+    if (isset($this->usuari)) {
+      $this->getDadesUsuari();
     }
-    printf("Error: %s.\n", $stmt->error);
-    return false;
+  }
+
+  // MÈTOODES ESTÀTICS CRUD
+  // MÈTODES NO-ESTÀTICS CRUD
+
+  public function desar()
+  {
+    $arrayAccio = get_object_vars($this);
+    $arrayAccio = $this->estandard($arrayAccio);
+    return parent::crear($arrayAccio);
+  }
+
+  public function borrar()
+  {
+    return parent::borrarPerUnic('accioID', $this->accioID);
+  }
+
+  // GETTERS
+  public function getDadesUsuari()
+  {
+    if ($this->usuari == null) {
+      return false;
+    }
+
+    $this->user = User::trobarPerId($this->usuari);
+    return true;
+  }
+
+  // ALTRES MÈTODES
+  /**
+   * Estandarditza les propietats de l'objecte per a ser creat. Eliminar aquelles columnes que tenen valor per defecte a la DB. O bé la propietat user que és l'objecte relacionat..
+   */
+  private function estandard(array $data)
+  {
+    unset($data['accioID']);
+    unset($data['data_hora']);
+    unset($data['user']);
+    return $data;
+  }
+
+  /**
+   * Comprova si totes les propietats de l'objecte són null. Per evitar desar objectes nul a la DB
+   * @return bool
+   */
+  public function allNull()
+  {
+    foreach (get_object_vars($this) as $propietat => $valor) {
+      if ($propietat != 'usuari') {
+        if (!is_null($valor)) {
+          return false;
+        }
+
+      }
+    }
+    return true;
   }
 }
