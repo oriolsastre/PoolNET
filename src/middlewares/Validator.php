@@ -1,7 +1,7 @@
 <?php
 namespace PoolNET\MW;
 
-use PoolNET\controller\Controlador;
+use PoolNET\service\Controlador;
 use ReflectionClass;
 
 class Validator extends Controlador
@@ -11,7 +11,7 @@ class Validator extends Controlador
    * @param array<string, mixed>|null $obligatori [Opcional] Valors necessaris que han der ser al cos de la petició i el seu tipus. Per exemple, ``['controlID' => 'integer']``.
    * @return array Cos de la petició parsejat.
    */
-  public static function parseBody( ? array $obligatori = null) : array
+  public static function parseBody(?array $obligatori = null): array
   {
     $body = json_decode(file_get_contents('php://input'), true);
     if ($obligatori !== null) {

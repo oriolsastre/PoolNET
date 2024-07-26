@@ -1,8 +1,8 @@
 <?php
 namespace PoolNET\MW;
 
-use PoolNET\controller\Controlador;
-use PoolNET\JwtHandler;
+use PoolNET\service\Controlador;
+use PoolNET\service\JwtHandler;
 use PoolNET\User;
 
 class AuthMW extends Controlador

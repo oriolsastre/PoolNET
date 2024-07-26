@@ -2,7 +2,7 @@
 namespace PoolNET\config;
 
 use PoolNET\error\InvalidJwtToken;
-use PoolNET\JwtHandler;
+use PoolNET\service\JwtHandler;
 use stdClass;
 
 class Session

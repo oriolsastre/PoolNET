@@ -1,6 +1,6 @@
 <?php
 
-namespace PoolNET\controller;
+namespace PoolNET\service;
 
 use PDO;
 use PoolNET\config\Database;
@@ -43,7 +43,7 @@ class Controlador
           $response = ["error" => "Mètode no permès"];
         }
         break;
-      default:
+      case 500:
         if ($response === null) {
           $response = ["error" => "Alguna cosa ha fallat"];
         }
@@ -55,6 +55,5 @@ class Controlador
 
     http_response_code($status);
     echo json_encode($response);
-    exit;
   }
 }
