@@ -7,10 +7,9 @@
             "PoolNET\\": "models/",
             "PoolNET\\config\\": "config/",
             "PoolNET\\MW\\": "middlewares/",
-            "PoolNET\\controller\\": "controllers/",
-            "PoolNET\\router\\": "routes/",
             "PoolNET\\error\\": "models/errors/",
-            "PoolNET\\page\\": "models/pages/"
+            "PoolNET\\service\\": "services/",
+            "PoolNET\\controller\\": "controllers/"
         }
     },
     "require-dev": {

@@ -2,6 +2,7 @@
 namespace PoolNET\controller;
 
 use PoolNET\Control as PoolNETControl;
+use PoolNET\service\Controlador;
 
 class Control extends Controlador
 {

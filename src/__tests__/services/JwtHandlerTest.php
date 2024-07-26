@@ -1,10 +1,13 @@
-<?php declare (strict_types = 1);
+<?php
+
+declare(strict_types=1);
+
 use PHPUnit\Framework\TestCase;
 use PoolNET\config\Env;
-use PoolNET\JwtHandler;
+use PoolNET\service\JwtHandler;
 
 /**
- * @covers \PoolNET\JwtHandler
+ * @covers \PoolNET\service\JwtHandler
  */
 class JwtHandlerTest extends TestCase
 {
@@ -13,7 +16,18 @@ class JwtHandlerTest extends TestCase
     Env::executar();
   }
   /**
-   * @covers \PoolNET\JwtHandler::__construct
+   * @coversNothing
+   * @doesNotPerformAssertions
+   */
+  private function getObjectProtectedProperty(string $property)
+  {
+    $reflectionClass = new ReflectionClass('PoolNET\service\JwtHandler');
+    $reflectionProperty = $reflectionClass->getProperty($property);
+    $reflectionProperty->setAccessible(true);
+    return $reflectionProperty->getValue((object) $reflectionClass->newInstance());
+  }
+  /**
+   * @covers \PoolNET\service\JwtHandler::__construct
    * @uses \PoolNET\config\Env
    */
   public function testConstructor(): void
@@ -24,23 +38,11 @@ class JwtHandlerTest extends TestCase
     $this->assertSame(time(), $this->getObjectProtectedProperty('issuedAt'));
     // Test that the constructor sets the correct expire value
     $this->assertSame(time() + 3600, $this->getObjectProtectedProperty('expire'));
-    // Test that the constructor sets the correct jwt_secrect value
-    $this->assertSame((string) getenv('ENV_JWTSecret'), $this->getObjectProtectedProperty('jwt_secrect'));
-
+    // Test that the constructor sets the correct jwtSecret value
+    $this->assertSame((string) getenv('ENV_JWTSecret'), $this->getObjectProtectedProperty('jwtSecret'));
   }
   /**
-   * @coversNothing
-   * @doesNotPerformAssertions
-   */
-  private function getObjectProtectedProperty(string $property)
-  {
-    $reflectionClass = new ReflectionClass('PoolNET\JwtHandler');
-    $reflectionProperty = $reflectionClass->getProperty($property);
-    $reflectionProperty->setAccessible(true);
-    return $reflectionProperty->getValue((object) $reflectionClass->newInstance());
-  }
-  /**
-   * @covers \PoolNET\JwtHandler::jwtEncodeData
+   * @covers \PoolNET\service\JwtHandler::jwtEncodeData
    * @uses \PoolNET\config\Env
    */
   public function testJwtEncodeData(): void
@@ -52,7 +54,7 @@ class JwtHandlerTest extends TestCase
   }
 
   /**
-   * @covers \PoolNET\JwtHandler::jwtDecodeData
+   * @covers \PoolNET\service\JwtHandler::jwtDecodeData
    * @uses \PoolNET\config\Env
    * @uses \PoolNET\error\InvalidJwtToken
    */

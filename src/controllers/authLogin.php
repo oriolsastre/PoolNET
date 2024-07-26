@@ -1,7 +1,8 @@
 <?php
 namespace PoolNET\controller;
 
-use PoolNET\JwtHandler;
+use PoolNET\service\Controlador;
+use PoolNET\service\JwtHandler;
 use PoolNET\User;
 
 class AuthLogin extends Controlador

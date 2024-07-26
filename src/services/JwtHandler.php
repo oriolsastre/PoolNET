@@ -1,5 +1,5 @@
 <?php declare (strict_types = 1);
-namespace PoolNET;
+namespace PoolNET\service;
 
 use Exception;
 use Firebase\JWT\JWT;
@@ -9,7 +9,7 @@ use stdClass;
 
 class JwtHandler
 {
-  protected string $jwt_secrect;
+  protected string $jwtSecret;
   protected int $issuedAt;
   protected int $expire;
 
@@ -19,7 +19,7 @@ class JwtHandler
     $this->issuedAt = time();
     // Token Validity (3600 second = 1hr)
     $this->expire = $this->issuedAt + 3600;
-    $this->jwt_secrect = (string) getenv('ENV_JWTSecret');
+    $this->jwtSecret = (string) getenv('ENV_JWTSecret');
   }
 
   /**
@@ -38,7 +38,7 @@ class JwtHandler
       "exp" => $this->expire,
       "data" => $data,
     ];
-    return JWT::encode($token, $this->jwt_secrect, 'HS256');
+    return JWT::encode($token, $this->jwtSecret, 'HS256');
   }
 
   /**
@@ -50,7 +50,7 @@ class JwtHandler
   public function jwtDecodeData(string $jwt_token): stdClass
   {
     try {
-      $decode = JWT::decode($jwt_token, new Key($this->jwt_secrect, 'HS256'));
+      $decode = JWT::decode($jwt_token, new Key($this->jwtSecret, 'HS256'));
       return $decode->data;
     } catch (Exception $e) {
       throw new InvalidJwtToken();

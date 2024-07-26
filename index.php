@@ -1,11 +1,13 @@
-<?php declare (strict_types = 1);
+<?php
+
+declare(strict_types=1);
 require_once __DIR__ . '/src/vendor/autoload.php';
 
 use PoolNET\config\Env;
 use PoolNET\router\Router;
 
 Env::executar();
-$uri = explode('oriol/PoolNET', $_SERVER['REQUEST_URI'])[1];
+$uri = explode('/PoolNET', $_SERVER['REQUEST_URI'])[1];
 $route = explode('?', $uri)[0];
 $params = explode('?', $uri)[1] ?? null;
 

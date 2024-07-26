@@ -9,11 +9,11 @@ function isNullOrNumber(value: any) {
 
 describe("Testejant l'endpoint GET de control", () => {
   it("Hauria de rebre un array amb els últims controls", async () => {
-    const response = await req.get('/');
+    const response = await req.get("/");
 
     expect(response.status).toBe(200);
     expect(response.body).toBeInstanceOf(Array);
-    expect(response.body.length).toBeLessThanOrEqual(20)
+    expect(response.body.length).toBeLessThanOrEqual(20);
     response.body.forEach((control: any) => {
       expect(typeof control.controlID).toBe("number");
       expect(typeof control.data_hora).toBe("string");
@@ -28,6 +28,6 @@ describe("Testejant l'endpoint GET de control", () => {
       expect(typeof control.user.userID).toBe("number");
       expect(typeof control.user.usuari).toBe("string");
       expect(typeof control.user.nivell).toBe("number");
-    })
+    });
   });
 });
