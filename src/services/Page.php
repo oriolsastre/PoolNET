@@ -1,9 +1,10 @@
 <?php
-namespace PoolNET\page;
+
+namespace PoolNET\service;
 
 use PoolNET\config\Session;
 
-abstract class Page
+class Page
 {
   protected Session $session;
 
