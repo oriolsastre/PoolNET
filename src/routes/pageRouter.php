@@ -1,8 +1,15 @@
 <?php
 
+namespace PoolNET\route;
+
 use PoolNET\service\RouterPage;
+use function PoolNET\page\mainPage;
 
-require_once __DIR__ . "/../pages/main.php";
+function pageRouter(): RouterPage
+{
+    $mainPage = mainPage();
 
-$pageRouter = new RouterPage("/");
-$pageRouter->addPage("/", $mainPage);
+    $router = new RouterPage("/");
+    $router->addPage("/", $mainPage);
+    return $router;
+}

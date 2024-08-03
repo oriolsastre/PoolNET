@@ -2,8 +2,8 @@ body {
   background: #00ffff;
   background-image: url("../img/fons_aigua.jpg");
   background-size: 100%;
-  margin-right: 5px;
-  margin-left: 5px;
+  margin-right: auto;
+  margin-left: auto;
   font-size: 22px;
   max-width: 1000px;
   text-align: center;

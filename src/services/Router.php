@@ -8,26 +8,26 @@ class Router
 {
   public ?string $prefix;
   protected string $format;
-  protected stdClass $_routers;
-  protected stdClass $_routes;
+  protected stdClass $routers;
+  protected stdClass $routes;
   public function __construct(?string $prefix = null, string $format = "json")
   {
     $this->prefix = $prefix;
     $this->format = $format;
-    $this->_routers = new stdClass();
-    $this->_routes = new stdClass();
+    $this->routers = new stdClass();
+    $this->routes = new stdClass();
   }
 
   public function addRouter(string $path, Router $router): void
   {
-    $this->_routers->$path = $router;
+    $this->routers->$path = $router;
   }
 
   public function use(string $path, ?string $params, string $method): void
   {
     $path = $this->removePrefix($path);
     $path = $this->removeClosingSlash($path);
-    foreach ($this->_routers as $routerPath => $router) {
+    foreach ($this->routers as $routerPath => $router) {
       if (str_starts_with($path, $routerPath)) {
         $router->use($path, $params, $method);
         return;

@@ -13,8 +13,8 @@ use PoolNET\service\RouterPage;
 class RouterTest extends TestCase
 {
     private ReflectionProperty $formatProp;
-    private ReflectionProperty $_routersProp;
-    private ReflectionProperty $_routesProp;
+    private ReflectionProperty $routersProp;
+    private ReflectionProperty $routesProp;
     /**
      * @covers ::__construct
      */
@@ -27,20 +27,20 @@ class RouterTest extends TestCase
         $this->assertInstanceOf(Router::class, $router);
         $this->assertNull($router->prefix);
         $this->assertEquals('json', $this->formatProp->getValue($router));
-        $this->assertInstanceOf(stdClass::class, $this->_routersProp->getValue($router));
-        $this->assertEquals(0, count(get_object_vars($this->_routersProp->getValue($router))));
-        $this->assertInstanceOf(stdClass::class, $this->_routesProp->getValue($router));
-        $this->assertEquals(0, count(get_object_vars($this->_routesProp->getValue($router))));
+        $this->assertInstanceOf(stdClass::class, $this->routersProp->getValue($router));
+        $this->assertEquals(0, count(get_object_vars($this->routersProp->getValue($router))));
+        $this->assertInstanceOf(stdClass::class, $this->routesProp->getValue($router));
+        $this->assertEquals(0, count(get_object_vars($this->routesProp->getValue($router))));
 
         // Amb valors predefinits
         $router2 = new Router(("/main/accio"), "html");
         $this->assertInstanceOf(Router::class, $router2);
         $this->assertEquals("/main/accio", $router2->prefix);
         $this->assertEquals('html', $this->formatProp->getValue($router2));
-        $this->assertInstanceOf(stdClass::class, $this->_routersProp->getValue($router2));
-        $this->assertEquals(0, count(get_object_vars($this->_routersProp->getValue($router2))));
-        $this->assertInstanceOf(stdClass::class, $this->_routesProp->getValue($router2));
-        $this->assertEquals(0, count(get_object_vars($this->_routesProp->getValue($router2))));
+        $this->assertInstanceOf(stdClass::class, $this->routersProp->getValue($router2));
+        $this->assertEquals(0, count(get_object_vars($this->routersProp->getValue($router2))));
+        $this->assertInstanceOf(stdClass::class, $this->routesProp->getValue($router2));
+        $this->assertEquals(0, count(get_object_vars($this->routesProp->getValue($router2))));
     }
     /**
      * @covers ::addRouter
@@ -49,19 +49,20 @@ class RouterTest extends TestCase
      */
     public function testAddRouter(): void
     {
+        $pageRoute = "/pages";
         $this->getRouterProtectedProperties();
         $router1 = new Router("/", "json");
-        $router2 = new RouterPage("/pages");
+        $router2 = new RouterPage($pageRoute);
 
         // No hi ha cap router d'inici
-        $this->assertInstanceOf(stdClass::class, $this->_routersProp->getValue($router1));
-        $this->assertEquals(0, count(get_object_vars($this->_routersProp->getValue($router1))));
+        $this->assertInstanceOf(stdClass::class, $this->routersProp->getValue($router1));
+        $this->assertEquals(0, count(get_object_vars($this->routersProp->getValue($router1))));
 
         // N'afageixo un, hi és, i és del tipus que toca.
-        $router1->addRouter("/pages", $router2);
-        $this->assertEquals(1, count(get_object_vars($this->_routersProp->getValue($router1))));
-        $this->assertInstanceOf(Router::class, $this->_routersProp->getValue($router1)->{"/pages"});
-        $this->assertEquals($router2, $this->_routersProp->getValue($router1)->{"/pages"});
+        $router1->addRouter($pageRoute, $router2);
+        $this->assertEquals(1, count(get_object_vars($this->routersProp->getValue($router1))));
+        $this->assertInstanceOf(Router::class, $this->routersProp->getValue($router1)->{$pageRoute});
+        $this->assertEquals($router2, $this->routersProp->getValue($router1)->{$pageRoute});
     }
     /**
      * @covers ::removePrefix
@@ -119,11 +120,9 @@ class RouterTest extends TestCase
     }
     /**
      * @covers ::use
+     * @doesNotPerformAssertions
      * @uses \PoolNET\service\Router
      * @uses \PoolNET\service\RouterJson
-     * @uses ::addRouter
-     * @uses ::removePrefix
-     * @uses ::removeClosingSlash
      */
     public function testUse(): void
     {
@@ -143,9 +142,9 @@ class RouterTest extends TestCase
         $reflectionClass = new ReflectionClass(Router::class);
         $this->formatProp = $reflectionClass->getProperty('format');
         $this->formatProp->setAccessible(true);
-        $this->_routersProp = $reflectionClass->getProperty('_routers');
-        $this->_routersProp->setAccessible(true);
-        $this->_routesProp = $reflectionClass->getProperty('_routes');
-        $this->_routesProp->setAccessible(true);
+        $this->routersProp = $reflectionClass->getProperty('routers');
+        $this->routersProp->setAccessible(true);
+        $this->routesProp = $reflectionClass->getProperty('routes');
+        $this->routesProp->setAccessible(true);
     }
 }

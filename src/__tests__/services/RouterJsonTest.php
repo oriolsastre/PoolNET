@@ -12,7 +12,7 @@ use PoolNET\service\RouterJson;
  */
 class RouterJsonTest extends TestCase
 {
-    private ReflectionProperty $_controllersProp;
+    private ReflectionProperty $controllersProp;
     /**
      * @covers ::__construct
      * @covers ::addController
@@ -25,16 +25,17 @@ class RouterJsonTest extends TestCase
     {
         $this->getRouterProtectedProperties();
 
-        $router = new RouterJson("/usuari");
+        $rutaUsuari = "/usuari";
+        $router = new RouterJson($rutaUsuari);
         $this->assertInstanceOf(RouterJson::class, $router);
-        $this->assertInstanceOf(stdClass::class, $this->_controllersProp->getValue($router));
-        $this->assertEquals(0, count(get_object_vars($this->_controllersProp->getValue($router))));
+        $this->assertInstanceOf(stdClass::class, $this->controllersProp->getValue($router));
+        $this->assertEquals(0, count(get_object_vars($this->controllersProp->getValue($router))));
 
         $controlador = new Controlador();
-        $router->addController("/usuari", $controlador);
-        $this->assertEquals(1, count(get_object_vars($this->_controllersProp->getValue($router))));
-        $this->assertInstanceOf(Controlador::class, $this->_controllersProp->getValue($router)->{"/usuari"});
-        $this->assertEquals($controlador, $this->_controllersProp->getValue($router)->{"/usuari"});
+        $router->addController($rutaUsuari, $controlador);
+        $this->assertEquals(1, count(get_object_vars($this->controllersProp->getValue($router))));
+        $this->assertInstanceOf(Controlador::class, $this->controllersProp->getValue($router)->{$rutaUsuari});
+        $this->assertEquals($controlador, $this->controllersProp->getValue($router)->{$rutaUsuari});
     }
     /**
      * @coversNothing
@@ -43,7 +44,7 @@ class RouterJsonTest extends TestCase
     private function getRouterProtectedProperties(): void
     {
         $reflectionClass = new ReflectionClass(RouterJson::class);
-        $this->_controllersProp = $reflectionClass->getProperty('_controllers');
-        $this->_controllersProp->setAccessible(true);
+        $this->controllersProp = $reflectionClass->getProperty('controllers');
+        $this->controllersProp->setAccessible(true);
     }
 }

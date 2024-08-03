@@ -11,7 +11,7 @@ use PoolNET\service\RouterPage;
  */
 class RouterPageTest extends TestCase
 {
-    private ReflectionProperty $_pagesProp;
+    private ReflectionProperty $pagesProp;
     /**
      * @covers ::__construct
      * @covers ::addPage
@@ -24,16 +24,17 @@ class RouterPageTest extends TestCase
     {
         $this->getRouterProtectedProperties();
 
-        $router = new RouterPage("/usuari");
+        $rutaUsuari = "/usuari";
+        $router = new RouterPage($rutaUsuari);
         $this->assertInstanceOf(RouterPage::class, $router);
-        $this->assertInstanceOf(stdClass::class, $this->_pagesProp->getValue($router));
-        $this->assertEquals(0, count(get_object_vars($this->_pagesProp->getValue($router))));
+        $this->assertInstanceOf(stdClass::class, $this->pagesProp->getValue($router));
+        $this->assertEquals(0, count(get_object_vars($this->pagesProp->getValue($router))));
 
         $page = new Page("Usuari");
-        $router->addPage("/usuari", $page);
-        $this->assertEquals(1, count(get_object_vars($this->_pagesProp->getValue($router))));
-        $this->assertInstanceOf(Page::class, $this->_pagesProp->getValue($router)->{"/usuari"});
-        $this->assertEquals($page, $this->_pagesProp->getValue($router)->{"/usuari"});
+        $router->addPage($rutaUsuari, $page);
+        $this->assertEquals(1, count(get_object_vars($this->pagesProp->getValue($router))));
+        $this->assertInstanceOf(Page::class, $this->pagesProp->getValue($router)->{$rutaUsuari});
+        $this->assertEquals($page, $this->pagesProp->getValue($router)->{$rutaUsuari});
     }
     /**
      * @coversNothing
@@ -42,7 +43,7 @@ class RouterPageTest extends TestCase
     private function getRouterProtectedProperties(): void
     {
         $reflectionClass = new ReflectionClass(RouterPage::class);
-        $this->_pagesProp = $reflectionClass->getProperty('_pages');
-        $this->_pagesProp->setAccessible(true);
+        $this->pagesProp = $reflectionClass->getProperty('pages');
+        $this->pagesProp->setAccessible(true);
     }
 }

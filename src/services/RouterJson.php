@@ -8,11 +8,11 @@ use stdClass;
 
 class RouterJson extends Router
 {
-  private stdClass $_controllers;
+  private stdClass $controllers;
   public function __construct(string $prefix)
   {
     parent::__construct($prefix, "json");
-    $this->_controllers = new stdClass();
+    $this->controllers = new stdClass();
   }
 
   public function addController(string $path, string | Controlador $controlador, string $metode = "GET"): void
@@ -20,7 +20,7 @@ class RouterJson extends Router
     if (is_string($controlador) && !class_exists($controlador)) {
       throw new InvalidArgumentException("Aquest controlador no existeix");
     }
-    $this->_controllers->$path = $controlador;
+    $this->controllers->$path = $controlador;
   }
 
   public function use(string $path, ?string $params, string $method): void
@@ -30,14 +30,14 @@ class RouterJson extends Router
     parent::use($path, $params, $method);
     $routes = $this->getSuccessiveRoutes($path);
     foreach ($routes as $route) {
-      if (isset($this->_routes->$route)) {
-        $controller = $this->_routes->$route;
+      if (isset($this->routes->$route)) {
+        $controller = $this->routes->$route;
         if ($controller instanceof Controlador) {
           if (method_exists($controller, $method)) {
             $controller->$method($params);
             return;
           }
-        } elseif (gettype($controller) === "string" and class_exists($controller)) {
+        } elseif (gettype($controller) === "string" && class_exists($controller)) {
           if (method_exists($controller, $method)) {
             $controller::$method($params);
             return;

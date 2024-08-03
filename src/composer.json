@@ -9,8 +9,14 @@
             "PoolNET\\MW\\": "middlewares/",
             "PoolNET\\error\\": "models/errors/",
             "PoolNET\\service\\": "services/",
-            "PoolNET\\controller\\": "controllers/"
-        }
+            "PoolNET\\controller\\": "controllers/",
+            "PoolNET\\route\\": "routes/",
+            "PoolNET\\page\\": "pages/"
+        },
+        "files": [
+            "routes/index.php",
+            "pages/index.php"
+        ]
     },
     "require-dev": {
         "phpunit/phpunit": "^10.2"

@@ -19,6 +19,7 @@
             <directory>services</directory>
         </include>
         <exclude>
+            <file>**/index.php</file>
             <file>config/env-example.php</file>
             <file>config/database.sql</file>
         </exclude>
