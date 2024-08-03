@@ -1,9 +1,10 @@
 <?php
-namespace PoolNET\page;
+
+namespace PoolNET\service;
 
 use PoolNET\config\Session;
 
-abstract class Page
+class Page
 {
   protected Session $session;
 
@@ -26,7 +27,7 @@ abstract class Page
         <meta name="viewport" content="width=device-width"/>
         <title> $this->title </title>
         <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏊</text></svg>">
-        <link rel="stylesheet" type="text/css" href="css/format_mobil.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
         <script src="https://kit.fontawesome.com/5d896814dd.js" crossorigin="anonymous"></script>
       </head>
       EOT;

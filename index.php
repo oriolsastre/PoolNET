@@ -4,17 +4,18 @@ declare(strict_types=1);
 require_once __DIR__ . '/src/vendor/autoload.php';
 
 use PoolNET\config\Env;
-use PoolNET\router\Router;
+use PoolNET\service\Router;
+
+use function PoolNET\route\api\apiRouter;
+use function \PoolNET\route\pageRouter;
 
 Env::executar();
 $uri = explode('/PoolNET', $_SERVER['REQUEST_URI'])[1];
 $route = explode('?', $uri)[0];
 $params = explode('?', $uri)[1] ?? null;
 
-$router = new Router();
-$router->addRoute('/', 'main.php');
-$router->addRoute('/api/control', 'api/control/index.php');
-$router->addRoute('/api/accio', 'api/accio/index.php');
-$router->addRoute('/api/auth/login', 'api/auth/login/index.php');
+$router = new Router("", "html");
+$router->addRouter("/api", apiRouter());
+$router->addRouter("/", pageRouter());
 
-$router->use($route, $params);
+$router->use($route, $params, strtolower($_SERVER['REQUEST_METHOD']));
