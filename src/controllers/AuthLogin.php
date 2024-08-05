@@ -1,4 +1,5 @@
 <?php
+
 namespace PoolNET\controller;
 
 use PoolNET\service\Controlador;

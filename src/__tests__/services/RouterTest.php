@@ -29,8 +29,6 @@ class RouterTest extends TestCase
         $this->assertEquals('json', $this->formatProp->getValue($router));
         $this->assertInstanceOf(stdClass::class, $this->routersProp->getValue($router));
         $this->assertEquals(0, count(get_object_vars($this->routersProp->getValue($router))));
-        $this->assertInstanceOf(stdClass::class, $this->routesProp->getValue($router));
-        $this->assertEquals(0, count(get_object_vars($this->routesProp->getValue($router))));
 
         // Amb valors predefinits
         $router2 = new Router(("/main/accio"), "html");
@@ -39,8 +37,6 @@ class RouterTest extends TestCase
         $this->assertEquals('html', $this->formatProp->getValue($router2));
         $this->assertInstanceOf(stdClass::class, $this->routersProp->getValue($router2));
         $this->assertEquals(0, count(get_object_vars($this->routersProp->getValue($router2))));
-        $this->assertInstanceOf(stdClass::class, $this->routesProp->getValue($router2));
-        $this->assertEquals(0, count(get_object_vars($this->routesProp->getValue($router2))));
     }
     /**
      * @covers ::addRouter
@@ -119,21 +115,6 @@ class RouterTest extends TestCase
         $this->assertEquals(["/", "/route", "/route/to", "/route/to/api"], $result1);
     }
     /**
-     * @covers ::use
-     * @doesNotPerformAssertions
-     * @uses \PoolNET\service\Router
-     * @uses \PoolNET\service\RouterJson
-     */
-    public function testUse(): void
-    {
-        $router1 = new Router("/api");
-        $router2 = new RouterJson("/control", "json");
-        $router1->addRouter("/control", $router2);
-
-        $crida = "/api/control";
-        $result = $router1->use($crida, null, "GET");
-    }
-    /**
      * @coversNothing
      * @doesNotPerformAssertions
      */
@@ -144,7 +125,5 @@ class RouterTest extends TestCase
         $this->formatProp->setAccessible(true);
         $this->routersProp = $reflectionClass->getProperty('routers');
         $this->routersProp->setAccessible(true);
-        $this->routesProp = $reflectionClass->getProperty('routes');
-        $this->routesProp->setAccessible(true);
     }
 }

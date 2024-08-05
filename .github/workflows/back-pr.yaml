@@ -40,7 +40,7 @@ jobs:
           cd ${{ github.workspace }}/src
           composer update --no-ansi --no-interaction --no-progress
           cd ${{ github.workspace }}/src
-          composer dump-autoload
+          composer dump-autoload -o
       - name: Run tests with phpunit/phpunit
         run: |
           cd ${{ github.workspace }}/src

@@ -3,8 +3,7 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use PoolNET\service\Controlador;
-use PoolNET\service\Page;
+use PoolNET\controller\Control;
 use PoolNET\service\RouterJson;
 
 /**
@@ -31,10 +30,9 @@ class RouterJsonTest extends TestCase
         $this->assertInstanceOf(stdClass::class, $this->controllersProp->getValue($router));
         $this->assertEquals(0, count(get_object_vars($this->controllersProp->getValue($router))));
 
-        $controlador = new Controlador();
+        $controlador = Control::class;
         $router->addController($rutaUsuari, $controlador);
         $this->assertEquals(1, count(get_object_vars($this->controllersProp->getValue($router))));
-        $this->assertInstanceOf(Controlador::class, $this->controllersProp->getValue($router)->{$rutaUsuari});
         $this->assertEquals($controlador, $this->controllersProp->getValue($router)->{$rutaUsuari});
     }
     /**
