@@ -2,6 +2,7 @@
 
 namespace PoolNET\service;
 
+use PoolNET\config\Request;
 use stdClass;
 
 class Router
@@ -9,13 +10,11 @@ class Router
   public ?string $prefix;
   protected string $format;
   protected stdClass $routers;
-  protected stdClass $routes;
   public function __construct(?string $prefix = null, string $format = "json")
   {
     $this->prefix = $prefix;
     $this->format = $format;
     $this->routers = new stdClass();
-    $this->routes = new stdClass();
   }
 
   public function addRouter(string $path, Router $router): void
@@ -23,13 +22,15 @@ class Router
     $this->routers->$path = $router;
   }
 
-  public function use(string $path, ?string $params, string $method): void
+  public function use(Request $req): void
   {
-    $path = $this->removePrefix($path);
+    $path = $this->removePrefix($req->routerPath);
     $path = $this->removeClosingSlash($path);
+    $req->routerPath = $path;
+    /** @var Router $router */
     foreach ($this->routers as $routerPath => $router) {
       if (str_starts_with($path, $routerPath)) {
-        $router->use($path, $params, $method);
+        $router->use($req);
         return;
       }
     }

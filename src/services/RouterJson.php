@@ -3,7 +3,9 @@
 namespace PoolNET\service;
 
 use InvalidArgumentException;
+use PoolNET\config\Request;
 use PoolNET\service\Router;
+use PoolNET\service\Controlador;
 use stdClass;
 
 class RouterJson extends Router
@@ -15,33 +17,27 @@ class RouterJson extends Router
     $this->controllers = new stdClass();
   }
 
-  public function addController(string $path, string | Controlador $controlador, string $metode = "GET"): void
+  public function addController(string $path, string $controlador): void
   {
-    if (is_string($controlador) && !class_exists($controlador)) {
-      throw new InvalidArgumentException("Aquest controlador no existeix");
+    if (/* !class_exists($controlador) ||  */!is_subclass_of($controlador, Controlador::class, true)) {
+      throw new InvalidArgumentException("Aquest controlador " . $controlador . " no existeix");
     }
     $this->controllers->$path = $controlador;
   }
 
-  public function use(string $path, ?string $params, string $method): void
+  public function use(Request $req): void
   {
-    $path = $this->removePrefix($path);
+    $path = $this->removePrefix($req->routerPath);
     $path = $this->removeClosingSlash($path);
-    parent::use($path, $params, $method);
+    parent::use($req);
     $routes = $this->getSuccessiveRoutes($path);
     foreach ($routes as $route) {
-      if (isset($this->routes->$route)) {
-        $controller = $this->routes->$route;
-        if ($controller instanceof Controlador) {
-          if (method_exists($controller, $method)) {
-            $controller->$method($params);
-            return;
-          }
-        } elseif (gettype($controller) === "string" && class_exists($controller)) {
-          if (method_exists($controller, $method)) {
-            $controller::$method($params);
-            return;
-          }
+      if (isset($this->controllers->$route)) {
+        $controller = $this->controllers->$route;
+        $method = $req->getMethod();
+        if (method_exists($controller, $method)) {
+          $controller::$method($req->getParams());
+          return;
         }
       }
     }
