@@ -71,7 +71,7 @@ class Page
   {
     if ($this->session->loggedInUser) {
       return <<<EOT
-        <span class="head_user" id="inici"><a class="dissimulat" href="./"><i class="fa-solid fa-house"></i></a>
+        <span class="head_user" id="inici"><a class="dissimulat" href="/"><i class="fa-solid fa-house"></i></a>
         <a class="dissimulat" href="calculadora.php"><i class="fa-solid fa-calculator"></i></a></span>
         <span class="head_user"><a class="dissimulat" href="alerta.php">
           <i class="fa-regular fa-bell"></i>
@@ -82,7 +82,7 @@ class Page
       return <<<EOT
         <span class="head_user" id="inici"><a class="dissimulat" href="./"><i class="fa-solid fa-house"></i></a>
         <a class="dissimulat" href="calculadora.php"><i class="fa-solid fa-calculator"></i></a></span>
-        <span class="head_user"><a href="usuari.php?accio=log_in" class="dissimulat"><i class="fa-regular fa-user"></i></a></span>
+        <span class="head_user"><a href="login" class="dissimulat"><i class="fa-regular fa-user"></i></a></span>
       EOT;
     }
   }

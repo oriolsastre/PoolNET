@@ -1,4 +1,5 @@
 <?php
+
 namespace PoolNET\MW;
 
 use PoolNET\service\Controlador;
@@ -37,7 +38,6 @@ class AuthMW extends Controlador
       return false;
     }
     return true;
-
   }
   /**
    * Comprova el token rebut a les cookies de la petició i permet seguir si aquest és vàlid. Si no, atura la petició amb un 401.
@@ -45,10 +45,6 @@ class AuthMW extends Controlador
    */
   public static function rutaProtegida(): void
   {
-    if (parent::$dbcnx === null) {
-      parent::connect();
-    }
-
     if (!self::isValid()) {
       self::respostaSimple(401, ["error" => "No autoritzat"], true);
     }

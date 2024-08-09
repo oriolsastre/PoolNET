@@ -41,4 +41,8 @@
             <directory>__tests__</directory>
         </testsuite>
     </testsuites>
+    <php>
+        <server name="REQUEST_URI" value="http://localhost/PoolNET/tests" />
+        <server name="REQUEST_METHOD" value="GET" />
+    </php>
 </phpunit>

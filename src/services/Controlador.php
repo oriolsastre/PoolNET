@@ -2,21 +2,8 @@
 
 namespace PoolNET\service;
 
-use PDO;
-use PoolNET\config\Database;
-
 class Controlador
 {
-  protected static ?PDO $dbcnx = null;
-  /**
-   * Crear una connexió a la base de dades.
-   * @return void
-   */
-  protected static function connect(): void
-  {
-    $database = new Database();
-    self::$dbcnx = $database->connect();
-  }
   /**
    * Aplica les capceleres per a les respostes de l'API.
    * @param string|null $allowMethod Mètodes permesos. GET per defecte.
@@ -35,25 +22,25 @@ class Controlador
    * @param bool $headers Si cal aplicar o no capceleres.
    * @return void
    */
-  public static function respostaSimple(int $status = 500, ?array $response = null, bool $headers = true): void
-  {
-    switch ($status) {
-      case 405:
-        if ($response === null) {
-          $response = ["error" => "Mètode no permès"];
-        }
-        break;
-      case 500:
-        if ($response === null) {
-          $response = ["error" => "Alguna cosa ha fallat"];
-        }
-        break;
-    }
-    if ($headers) {
-      self::headers('*');
-    }
+  // public static function respostaSimple(int $status = 500, ?array $response = null, bool $headers = true): void
+  // {
+  //   switch ($status) {
+  //     case 405:
+  //       if ($response === null) {
+  //         $response = ["error" => "Mètode no permès"];
+  //       }
+  //       break;
+  //     case 500:
+  //       if ($response === null) {
+  //         $response = ["error" => "Alguna cosa ha fallat"];
+  //       }
+  //       break;
+  //   }
+  //   if ($headers) {
+  //     self::headers('*');
+  //   }
 
-    http_response_code($status);
-    echo json_encode($response);
-  }
+  //   http_response_code($status);
+  //   echo json_encode($response);
+  // }
 }

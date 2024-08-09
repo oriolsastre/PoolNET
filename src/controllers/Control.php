@@ -2,32 +2,37 @@
 
 namespace PoolNET\controller;
 
+use PoolNET\config\Request;
+use PoolNET\config\Response;
 use PoolNET\Control as PoolNETControl;
+use PoolNET\interface\Controller\Get;
+use PoolNET\interface\Controller\Post;
 use PoolNET\service\Controlador;
+use Throwable;
 
-class Control extends Controlador
+class Control extends Controlador implements Get, Post
 {
   /**
    * @return void
    */
-  public static function get(): void
+  public static function get(Request $req, Response $res): void
   {
-    parent::headers("GET");
     try {
       $result = PoolNETControl::trobarMolts(['orderBy' => ['data_hora', 'DESC']], 20);
       $num = count($result);
-      $num > 0 ? $res = $result : $res = ['message' => 'No s\'ha trobat cap control'];
-      parent::respostaSimple(200, $res, false);
-    } catch (\Throwable $th) {
-      parent::respostaSimple(500, ["error" => $th->getMessage()], false);
+      $num > 0 ? $data = $result : $data = ['message' => 'No s\'ha trobat cap control'];
+      $res->withStatus(200)->toJson($data);
+    } catch (Throwable $th) {
+      $res->handleError($th);
     }
   }
   /**
    * @param array<string, mixed> $body El cos de la petició
    * @return void
    */
-  public static function post(array $body): void
+  public static function post(Request $req): void
   {
+    $body = $req->getParsedBody();
     parent::headers("POST");
     $userData = json_decode(getenv('JWT_USER_DATA'));
     try {
