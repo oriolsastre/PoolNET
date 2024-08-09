@@ -14,7 +14,7 @@ class Request
         $this->body = json_decode(file_get_contents('php://input'), true);
     }
 
-    private function getUri(): string
+    public function getUri(): string
     {
         return $_SERVER['REQUEST_URI'];
     }
@@ -31,12 +31,21 @@ class Request
     {
         return strtolower($_SERVER['REQUEST_METHOD']);
     }
-    public function getHeaders(): false | array
+    public function getHeaders(): array
     {
-        return getallheaders();
+        // return apache_request_headers();
+        $headers = array();
+        foreach ($_SERVER as $k => $v) {
+            if (substr($k, 0, 5) == "HTTP_") {
+                $k = str_replace('_', ' ', substr($k, 5));
+                $k = str_replace(' ', '-', ucwords(strtolower($k)));
+                $headers[$k] = $v;
+            }
+        }
+        return $headers;
     }
     public function getParsedBody(): array
     {
-        return $this->body;
+        return $this->body ? $this->body : [];
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace PoolNET\config;
 
 use PDO;
@@ -22,21 +23,22 @@ class Database
   }
   /**
    * Connecta a la base de dades
-   * @return PDO|null La connexió a la base de dades
+   * @return PDO La connexió a la base de dades
+   * @throws PDOException
    */
   public function connect(): PDO | null
   {
-    try {
-      $this->dbcnx = new PDO(
-        'mysql:host=' . $this->host . ';dbname=' . $this->dbName,
-        $this->user,
-        $this->password,
-        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]// Això per poder capturar errors diria.
-      );
-    } catch (PDOException $err) {
-      echo 'Database connection failed: ' . $err->getMessage();
-      return null;
-    }
+    // try {
+    $this->dbcnx = new PDO(
+      'mysql:host=' . $this->host . ';dbname=' . $this->dbName,
+      $this->user,
+      $this->password,
+      [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION] // Això per poder capturar errors diria.
+    );
+    // } catch (PDOException $err) {
+    // echo 'Database connection failed: ' . $err->getMessage();
+    // return null;
+    // }
     return $this->dbcnx;
   }
 }

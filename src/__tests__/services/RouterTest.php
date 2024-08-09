@@ -14,7 +14,6 @@ class RouterTest extends TestCase
 {
     private ReflectionProperty $formatProp;
     private ReflectionProperty $routersProp;
-    private ReflectionProperty $routesProp;
     /**
      * @covers ::__construct
      */

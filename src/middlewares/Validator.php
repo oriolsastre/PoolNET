@@ -1,6 +1,9 @@
 <?php
+
 namespace PoolNET\MW;
 
+use PoolNET\config\Request;
+use PoolNET\interface\Middleware;
 use PoolNET\service\Controlador;
 use ReflectionClass;
 
@@ -8,12 +11,13 @@ class Validator extends Controlador
 {
   /**
    * Parseja el cos de la petició i el retorna com a array.
+   * @param Request $req
    * @param array<string, mixed>|null $obligatori [Opcional] Valors necessaris que han der ser al cos de la petició i el seu tipus. Per exemple, ``['controlID' => 'integer']``.
    * @return array Cos de la petició parsejat.
    */
-  public static function parseBody(?array $obligatori = null): array
+  public static function requiredFields(Request $req, array $obligatori): void
   {
-    $body = json_decode(file_get_contents('php://input'), true);
+    $body = $req->getParsedBody();
     if ($obligatori !== null) {
       foreach ($obligatori as $param => $tipus) {
         if (isset($body[$param])) {
@@ -37,7 +41,6 @@ class Validator extends Controlador
         }
       }
     }
-    return $body;
   }
   /**
    * Valida els valors del cos de la petició amb els tipus que admet la classe passada com a paràmetre.
@@ -60,5 +63,13 @@ class Validator extends Controlador
         ]);
       }
     }
+  }
+}
+
+class LoginValidator extends Validator implements Middleware
+{
+  public static function use(Request $req): void
+  {
+    self::requiredFields($req, ["usuari" => "string", "password" => "string"]);
   }
 }

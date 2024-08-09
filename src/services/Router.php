@@ -3,6 +3,8 @@
 namespace PoolNET\service;
 
 use PoolNET\config\Request;
+use PoolNET\config\Response;
+use PoolNET\interface\Middleware;
 use stdClass;
 
 class Router
@@ -22,15 +24,14 @@ class Router
     $this->routers->$path = $router;
   }
 
-  public function use(Request $req): void
+  public function use(Request $req, Response $res): void
   {
     $path = $this->removePrefix($req->routerPath);
-    $path = $this->removeClosingSlash($path);
     $req->routerPath = $path;
     /** @var Router $router */
     foreach ($this->routers as $routerPath => $router) {
       if (str_starts_with($path, $routerPath)) {
-        $router->use($req);
+        $router->use($req, $res);
         return;
       }
     }
@@ -41,9 +42,9 @@ class Router
     if (0 === strpos($string, $this->prefix)) {
       $string = substr($string, strlen($this->prefix));
     }
-    return $string;
+    return $this->removeClosingSlash($string);
   }
-  protected function removeClosingSlash(string $string): string
+  private function removeClosingSlash(string $string): string
   {
     return strlen($string) > 1 ? rtrim($string, "/") : $string;
   }
