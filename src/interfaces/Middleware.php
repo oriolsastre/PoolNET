@@ -2,9 +2,9 @@
 
 namespace PoolNET\interface;
 
-use PoolNET\config\Request;
+use PoolNET\config\{Request, Response};
 
 interface Middleware
 {
-    public static function use(Request $req): void;
+    public function use(Request &$req, Response &$res): bool;
 }

@@ -3,9 +3,7 @@
 declare(strict_types=1);
 require_once __DIR__ . '/src/vendor/autoload.php';
 
-use PoolNET\config\Env;
-use PoolNET\config\Request;
-use PoolNET\config\Response;
+use PoolNET\config\{Request, Response, Env};
 use PoolNET\service\Router;
 
 use function PoolNET\route\api\apiRouter;

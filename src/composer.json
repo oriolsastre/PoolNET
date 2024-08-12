@@ -22,5 +22,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^10.2"
+    },
+    "autoload-dev": {
+        "classmap": ["__tests__/"]
     }
 }

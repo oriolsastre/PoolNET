@@ -2,14 +2,22 @@
 
 namespace PoolNET\route\api;
 
-use PoolNET\controller\AuthLogin;
-use PoolNET\controller\Control;
+use PoolNET\controller\{Control, AuthLogin};
+use PoolNET\MW\LoginValidator;
+use PoolNET\service\MiddlewareArray;
 use PoolNET\service\RouterJson;
 
 function apiRouter(): RouterJson
 {
+    $control = new Control();
+    $authLogin = new AuthLogin();
+
+    $validatorMw = new LoginValidator();
+    $authLoginMws = new MiddlewareArray();
+    $authLoginMws->add($validatorMw);
+
     $apiRouter = new RouterJson('/api');
-    $apiRouter->addController("/control", Control::class);
-    $apiRouter->addController("/auth/login", AuthLogin::class);
+    $apiRouter->get("/control", $control);
+    $apiRouter->post("/auth/login", $authLogin, $authLoginMws);
     return $apiRouter;
 }

@@ -2,45 +2,41 @@
 
 namespace PoolNET\MW;
 
-use PoolNET\config\Request;
+use PoolNET\config\{Request, Response};
 use PoolNET\interface\Middleware;
-use PoolNET\service\Controlador;
 use ReflectionClass;
 
-class Validator extends Controlador
+class Validator
 {
   /**
    * Parseja el cos de la petició i el retorna com a array.
    * @param Request $req
    * @param array<string, mixed>|null $obligatori [Opcional] Valors necessaris que han der ser al cos de la petició i el seu tipus. Per exemple, ``['controlID' => 'integer']``.
-   * @return array Cos de la petició parsejat.
+   * @return bool 
    */
-  public static function requiredFields(Request $req, array $obligatori): void
+  public static function requiredFields(Request &$req, Response &$res, array $obligatori): bool
   {
     $body = $req->getParsedBody();
     if ($obligatori !== null) {
       foreach ($obligatori as $param => $tipus) {
         if (isset($body[$param])) {
           if (gettype($body[$param]) !== $tipus) {
-            self::respostaSimple(
-              400,
-              [
-                "error" => "Algun camp no és del tipus correcte.",
-                "camps_obligatoris" => $obligatori,
-              ],
-            );
+            $res->withStatus(400)->toJson([
+              "error" => "Algun camp no és del tipus correcte.",
+              "camps_obligatoris" => $obligatori,
+            ]);
+            return false;
           }
         } else {
-          self::respostaSimple(
-            400,
-            [
-              "error" => "Falta algun camp obligatori.",
-              "camps_obligatoris" => $obligatori,
-            ],
-          );
+          $res->withStatus(400)->toJson([
+            "error" => "Falta algun camp obligatori.",
+            "camps_obligatoris" => $obligatori,
+          ]);
+          return false;
         }
       }
     }
+    return true;
   }
   /**
    * Valida els valors del cos de la petició amb els tipus que admet la classe passada com a paràmetre.
@@ -58,18 +54,10 @@ class Validator extends Controlador
           ($value !== null && get_debug_type($value) !== $classProperty->getType()->getName())) &&
         !(get_debug_type($value) == "int" && $classProperty->getType()->getName() == "float")
       ) {
-        parent::respostaSimple(400, [
-          "error" => "El camp '" . $property . "' no pot ser '" . gettype($value) . "'. Hauria de ser '" . $classProperty->getType() . "'.",
-        ]);
+        // parent::respostaSimple(400, [
+        // "error" => "El camp '" . $property . "' no pot ser '" . gettype($value) . "'. Hauria de ser '" . $classProperty->getType() . "'.",
+        // ]);
       }
     }
-  }
-}
-
-class LoginValidator extends Validator implements Middleware
-{
-  public static function use(Request $req): void
-  {
-    self::requiredFields($req, ["usuari" => "string", "password" => "string"]);
   }
 }

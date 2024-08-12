@@ -2,8 +2,7 @@
 
 namespace PoolNET\service;
 
-use PoolNET\config\Request;
-use PoolNET\config\Response;
+use PoolNET\config\{Request, Response};
 use PoolNET\service\Page;
 use PoolNET\service\Router;
 use stdClass;
@@ -22,9 +21,9 @@ class RouterPage extends Router
     $this->pages->$path = $page;
   }
 
-  public function use(Request $req, Response $res): void
+  public function use(Request $req, Response $res): bool
   {
-    $path = $this->removePrefix($req->routerPath);
+    $path = $this->removePrefix($req->getPath());
     parent::use($req, $res);
     $routes = $this->getSuccessiveRoutes($path);
     foreach ($routes as $route) {
@@ -32,9 +31,10 @@ class RouterPage extends Router
         $page = $this->pages->$route;
         if ($page instanceof Page) {
           $page->render();
-          return;
+          return true;
         }
       }
     }
+    return false;
   }
 }
