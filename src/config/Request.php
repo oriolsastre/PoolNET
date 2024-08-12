@@ -5,12 +5,10 @@ namespace PoolNET\config;
 class Request
 {
     private string $uri;
-    public string $routerPath;
     public ?array $body;
     public function __construct()
     {
         $this->uri = $this->getUri();
-        $this->routerPath = $this->getPath();
         $this->body = json_decode(file_get_contents('php://input'), true);
     }
 

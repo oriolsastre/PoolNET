@@ -2,15 +2,13 @@
 
 namespace PoolNET\controller;
 
-use PoolNET\config\Request;
-use PoolNET\config\Response;
+use PoolNET\config\{Request, Response};
 use PoolNET\Control as PoolNETControl;
 use PoolNET\interface\Controller\Get;
 use PoolNET\interface\Controller\Post;
-use PoolNET\service\Controlador;
 use Throwable;
 
-class Control extends Controlador implements Get, Post
+class Control implements Get, Post
 {
   /**
    * @return void
@@ -30,24 +28,24 @@ class Control extends Controlador implements Get, Post
    * @param array<string, mixed> $body El cos de la petició
    * @return void
    */
-  public static function post(Request $req): void
+  public static function post(Request $req, Response $res): void
   {
     $body = $req->getParsedBody();
-    parent::headers("POST");
+    // parent::headers("POST");
     $userData = json_decode(getenv('JWT_USER_DATA'));
     try {
       $control = new PoolNETControl($body);
       $control->usuari = (int) $userData->userID;
       if ($control->allNull()) {
-        parent::respostaSimple(400, ["error" => "Mínim has d'omplir un camp."], false);
+        // parent::respostaSimple(400, ["error" => "Mínim has d'omplir un camp."], false);
       }
       if ($control->desar()) {
-        parent::respostaSimple(204, null, false);
+        // parent::respostaSimple(204, null, false);
       } else {
-        parent::respostaSimple(500, ["error" => "No s'ha pogut desar el control de l'aigua."], false);
+        // parent::respostaSimple(500, ["error" => "No s'ha pogut desar el control de l'aigua."], false);
       }
     } catch (\Throwable $th) {
-      parent::respostaSimple(400, ["error" => $th->getMessage()], false);
+      // parent::respostaSimple(400, ["error" => $th->getMessage()], false);
     }
   }
   /**
@@ -56,30 +54,30 @@ class Control extends Controlador implements Get, Post
    */
   public static function patch(array $body): void
   {
-    parent::headers("PATCH");
+    // parent::headers("PATCH");
     try {
       $userData = json_decode(getenv('JWT_USER_DATA'));
       $controlAEditar = PoolNETControl::trobarPerUnic('controlID', (int) $body['controlID']);
       if ($controlAEditar === null) {
-        parent::respostaSimple(404, ["error" => "No s'ha trobat el control."], false);
+        // parent::respostaSimple(404, ["error" => "No s'ha trobat el control."], false);
       }
       $controlAEditar->getDadesUsuari();
       if ($controlAEditar->user->userID != (int) $userData->userID && (int) $userData->nivell > 0) {
-        parent::respostaSimple(403, ["error" => "Només pots editar controls propis."], false);
+        // parent::respostaSimple(403, ["error" => "Només pots editar controls propis."], false);
       }
       foreach ($body as $camp => $valor) {
         $controlAEditar->$camp = $valor;
       }
       if ($controlAEditar->allNull()) {
-        parent::respostaSimple(400, ["error" => "No pots buidar un control."], false);
+        // parent::respostaSimple(400, ["error" => "No pots buidar un control."], false);
       }
       if ($controlAEditar->desar()) {
-        parent::respostaSimple(204, null, false);
+        // parent::respostaSimple(204, null, false);
       } else {
-        parent::respostaSimple(500, ["error" => "No s'ha pogut desar el control."], false);
+        // parent::respostaSimple(500, ["error" => "No s'ha pogut desar el control."], false);
       }
     } catch (\Throwable $th) {
-      parent::respostaSimple(400, ["error" => $th->getMessage()], false);
+      // parent::respostaSimple(400, ["error" => $th->getMessage()], false);
     }
   }
   /**
@@ -88,24 +86,24 @@ class Control extends Controlador implements Get, Post
    */
   public static function delete(array $body): void
   {
-    parent::headers("DELETE");
+    // parent::headers("DELETE");
     try {
       $userData = json_decode(getenv('JWT_USER_DATA'));
       $controlAEliminar = PoolNETControl::trobarPerUnic('controlID', (int) $body['controlID']);
       if ($controlAEliminar === null) {
-        parent::respostaSimple(404, ["error" => "No s'ha trobat el control."], false);
+        // parent::respostaSimple(404, ["error" => "No s'ha trobat el control."], false);
       }
       $controlAEliminar->getDadesUsuari();
       if ($controlAEliminar->user->userID != (int) $userData->userID && (int) $userData->nivell > 0) {
-        parent::respostaSimple(403, ["error" => "Només pots eliminar controls propis."], false);
+        // parent::respostaSimple(403, ["error" => "Només pots eliminar controls propis."], false);
       }
       if ($controlAEliminar->borrar()) {
-        parent::respostaSimple(204, null, false);
+        // parent::respostaSimple(204, null, false);
       } else {
-        parent::respostaSimple(500, ["error" => "No s'ha pogut borrar el control."], false);
+        // parent::respostaSimple(500, ["error" => "No s'ha pogut borrar el control."], false);
       }
     } catch (\Throwable $th) {
-      parent::respostaSimple(400, ["error" => $th->getMessage()], false);
+      // parent::respostaSimple(400, ["error" => $th->getMessage()], false);
     }
   }
 }
