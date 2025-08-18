@@ -61,11 +61,11 @@ class RequestTest extends TestCase
     public function testGetHeaders(): void
     {
         $request = new Request();
-        $this->assertSame([], $request->getHeaders());
 
         // Simulate a request with header
         $_SERVER['HTTP_ACCEPT'] = "application/json";
-        $this->assertSame(["Accept" => "application/json"], $request->getHeaders());
+        $this->assertArrayHasKey("Accept", $request->getHeaders());
+        $this->assertSame("application/json", $request->getHeaders()["Accept"]);
     }
     /**
      * @covers \PoolNET\config\Request

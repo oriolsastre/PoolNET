@@ -2,8 +2,8 @@
 
 namespace PoolNET\MW;
 
-use PoolNET\config\{Request, Response};
 use PoolNET\interface\Middleware;
+use PoolNET\interface\config\{Request, Response};
 
 class LoginValidator extends Validator implements Middleware
 {

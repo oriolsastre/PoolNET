@@ -2,14 +2,18 @@
 
 namespace PoolNET\config;
 
-class Request
+use PoolNET\interface\config\Request as RequestInterface;
+
+class Request implements RequestInterface
 {
     private string $uri;
     public ?array $body;
+    public ?array $headers;
     public function __construct()
     {
         $this->uri = $this->getUri();
-        $this->body = json_decode(file_get_contents('php://input'), true);
+        $this->headers = $this->getHeaders();
+        $this->body = $this->parseBody();
     }
 
     public function getUri(): string
@@ -38,6 +42,10 @@ class Request
                 $k = str_replace('_', ' ', substr($k, 5));
                 $k = str_replace(' ', '-', ucwords(strtolower($k)));
                 $headers[$k] = $v;
+            } else {
+                $k = str_replace('_', ' ', $k);
+                $k = str_replace(' ', '-', ucwords(strtolower($k)));
+                $headers[$k] = $v;
             }
         }
         return $headers;
@@ -45,5 +53,12 @@ class Request
     public function getParsedBody(): array
     {
         return $this->body ? $this->body : [];
+    }
+    private function parseBody(): ?array
+    {
+        if (isset($this->headers["Content-Type"]) && $this->headers["Content-Type"] === "application/x-www-form-urlencoded") {
+            return $_POST;
+        }
+        return json_decode(file_get_contents('php://input'), true);
     }
 }

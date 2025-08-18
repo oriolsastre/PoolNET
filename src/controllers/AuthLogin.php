@@ -2,10 +2,10 @@
 
 namespace PoolNET\controller;
 
-use PoolNET\config\{Request, Response};
-use PoolNET\interface\Controller\Post;
-use PoolNET\service\JwtHandler;
 use PoolNET\User;
+use PoolNET\interface\Controller\Post;
+use PoolNET\interface\config\{Request, Response};
+use PoolNET\service\JwtHandler;
 
 class AuthLogin implements Post
 {
@@ -36,6 +36,7 @@ class AuthLogin implements Post
       // "secure" => true, // Només disponible a través de HTTPS
       "samesite" => "Strict", // Només disponible per al mateix lloc (no cross-site)
     ]);
-    $res->withStatus(200)->toJson(["token" => $token]);
+    $res->withHeader("Location", "/PoolNET");
+    $res->withStatus(302)->toJson(["token" => $token]);
   }
 }

@@ -2,10 +2,10 @@
 
 namespace PoolNET\controller;
 
-use PoolNET\config\{Request, Response};
-use PoolNET\Control as PoolNETControl;
+use PoolNET\Control as DtoControl;
 use PoolNET\interface\Controller\Get;
 use PoolNET\interface\Controller\Post;
+use PoolNET\interface\config\{Request, Response};
 use Throwable;
 
 class Control implements Get, Post
@@ -16,7 +16,7 @@ class Control implements Get, Post
   public static function get(Request $req, Response $res): void
   {
     try {
-      $result = PoolNETControl::trobarMolts(['orderBy' => ['data_hora', 'DESC']], 20);
+      $result = DtoControl::trobarMolts(['orderBy' => ['data_hora', 'DESC']], 20);
       $num = count($result);
       $num > 0 ? $data = $result : $data = ['message' => 'No s\'ha trobat cap control'];
       $res->withStatus(200)->toJson($data);
@@ -34,18 +34,18 @@ class Control implements Get, Post
     // parent::headers("POST");
     $userData = json_decode(getenv('JWT_USER_DATA'));
     try {
-      $control = new PoolNETControl($body);
+      $control = new DtoControl($body);
       $control->usuari = (int) $userData->userID;
       if ($control->allNull()) {
-        // parent::respostaSimple(400, ["error" => "Mínim has d'omplir un camp."], false);
+        $res->withStatus(400)->toJson(["error" => "Mínim has d'omplir un camp."]);
       }
       if ($control->desar()) {
-        // parent::respostaSimple(204, null, false);
+        $res->withStatus(201)->toJson([]);
       } else {
-        // parent::respostaSimple(500, ["error" => "No s'ha pogut desar el control de l'aigua."], false);
+        $res->withStatus(500)->toJson(["error" => "No s'ha pogut desar el control de l'aigua."]);
       }
-    } catch (\Throwable $th) {
-      // parent::respostaSimple(400, ["error" => $th->getMessage()], false);
+    } catch (Throwable $th) {
+      $res->handleError($th);
     }
   }
   /**
@@ -57,7 +57,7 @@ class Control implements Get, Post
     // parent::headers("PATCH");
     try {
       $userData = json_decode(getenv('JWT_USER_DATA'));
-      $controlAEditar = PoolNETControl::trobarPerUnic('controlID', (int) $body['controlID']);
+      $controlAEditar = DtoControl::trobarPerUnic('controlID', (int) $body['controlID']);
       if ($controlAEditar === null) {
         // parent::respostaSimple(404, ["error" => "No s'ha trobat el control."], false);
       }
@@ -76,7 +76,7 @@ class Control implements Get, Post
       } else {
         // parent::respostaSimple(500, ["error" => "No s'ha pogut desar el control."], false);
       }
-    } catch (\Throwable $th) {
+    } catch (Throwable $th) {
       // parent::respostaSimple(400, ["error" => $th->getMessage()], false);
     }
   }
@@ -89,7 +89,7 @@ class Control implements Get, Post
     // parent::headers("DELETE");
     try {
       $userData = json_decode(getenv('JWT_USER_DATA'));
-      $controlAEliminar = PoolNETControl::trobarPerUnic('controlID', (int) $body['controlID']);
+      $controlAEliminar = DtoControl::trobarPerUnic('controlID', (int) $body['controlID']);
       if ($controlAEliminar === null) {
         // parent::respostaSimple(404, ["error" => "No s'ha trobat el control."], false);
       }
@@ -102,7 +102,7 @@ class Control implements Get, Post
       } else {
         // parent::respostaSimple(500, ["error" => "No s'ha pogut borrar el control."], false);
       }
-    } catch (\Throwable $th) {
+    } catch (Throwable $th) {
       // parent::respostaSimple(400, ["error" => $th->getMessage()], false);
     }
   }

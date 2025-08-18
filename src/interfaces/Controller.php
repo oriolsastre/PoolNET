@@ -2,7 +2,7 @@
 
 namespace PoolNET\interface\Controller;
 
-use PoolNET\config\{Request, Response};
+use PoolNET\interface\config\{Request, Response};
 
 interface Controlador {}
 interface Get extends Controlador

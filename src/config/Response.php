@@ -3,9 +3,10 @@
 namespace PoolNET\config;
 
 use PDOException;
+use PoolNET\interface\config\Response as ResponseInterface;
 use Throwable;
 
-class Response
+class Response implements ResponseInterface
 {
     private array $headers = [];
     private int $status = 200;

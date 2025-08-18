@@ -2,7 +2,7 @@
 
 namespace PoolNET\service;
 
-use PoolNET\config\{Request, Response};
+use PoolNET\interface\config\{Request, Response};
 use PoolNET\service\Page;
 use PoolNET\service\Router;
 use stdClass;

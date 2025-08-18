@@ -2,7 +2,7 @@
 
 namespace PoolNET\interface;
 
-use PoolNET\config\{Request, Response};
+use PoolNET\interface\config\{Request, Response};
 
 interface Middleware
 {

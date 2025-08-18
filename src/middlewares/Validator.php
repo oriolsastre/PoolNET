@@ -2,7 +2,7 @@
 
 namespace PoolNET\MW;
 
-use PoolNET\config\{Request, Response};
+use PoolNET\interface\config\{Request, Response};
 use PoolNET\interface\Middleware;
 use ReflectionClass;
 
@@ -31,6 +31,7 @@ class Validator
           $res->withStatus(400)->toJson([
             "error" => "Falta algun camp obligatori.",
             "camps_obligatoris" => $obligatori,
+            "enviat" => $body
           ]);
           return false;
         }

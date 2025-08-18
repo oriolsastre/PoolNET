@@ -2,7 +2,7 @@
 
 namespace PoolNET\service;
 
-use PoolNET\config\{Request, Response};
+use PoolNET\interface\config\{Request, Response};
 use PoolNET\interface\Controller\{Controlador, Get, Post, Patch, Delete};
 use PoolNET\interface\Middleware;
 use PoolNET\service\Router;

@@ -32,12 +32,10 @@ class AuthLoginTest extends ReqResTestCase
         $this->req->body = ["usuari" => $this->testUser, "password" => $this->testPswd];
         ob_start();
         AuthLogin::post($this->req, $this->res);
-        $this->assertEquals(200, http_response_code());
+        $this->assertEquals(302, http_response_code());
         $headers = $this->getAssocHeaders();
         $this->assertArrayHasKey('Set-Cookie', $headers);
         $this->assertStringContainsString('token=', $headers['Set-Cookie']);
-        // TODO: token rebut
-
         ob_end_clean();
 
         $this->req->body = ["usuari" => "Test", "password" => "Test123"];
