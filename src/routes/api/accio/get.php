@@ -1,8 +1,7 @@
 <?php
 
 use PoolNET\Accio;
-use PoolNET\config\Database;
-use PoolNET\config\Env;
+use PoolNET\config\database\Database;
 
 // Headers
 header('Access-Control-Allow-Origin: ' . getenv('ENV_HEADERS_ALLOW_ORIGIN'));
@@ -24,7 +23,7 @@ if ($num > 0) {
   while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
     extract($row);
     $accio_item = array(
-      'id' => $accioID,
+      'id' => $accioId,
       'data_hora' => $data_hora,
       'ph' => $ph,
       'clor' => $clor,
@@ -34,7 +33,7 @@ if ($num > 0) {
       'alcali' => $alcali,
       'aglutinant' => $aglutinant,
       'usuari' => array(
-        'userID' => $userID,
+        'usuariId' => $usuariId,
         'usuari' => $usuari,
       ),
     );

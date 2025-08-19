@@ -23,7 +23,7 @@ class AuthLogin implements Post
     }
     $jwt = new JwtHandler();
     $token = $jwt->jwtEncodeData('piscina', [
-      'userID' => $user->userID,
+      'usuariId' => $user->usuariId,
       'usuari' => $user->usuari,
       'nivell' => $user->nivell,
       'email' => $user->getPrivateEmail(),

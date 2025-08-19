@@ -1,14 +1,15 @@
 <?php
+
 namespace PoolNET;
 
 class Control extends Model
 {
-  protected static string $table = 'piscinaControl';
-  protected static string $idKey = 'controlID';
-  protected static array $uniqueKeyValues = ['controlID'];
+  protected static string $table = 'control';
+  protected static string $idKey = 'controlId';
+  protected static array $uniqueKeyValues = ['controlId'];
 
   // Properties
-  public ?int $controlID = null;
+  public ?int $controlId = null;
   public string $data_hora;
   public ?float $ph = null;
   public ?float $clor = null;
@@ -19,7 +20,7 @@ class Control extends Model
   public ?int $usuari = null; // Fa referencia a l'Id
   public ?User $user = null;
 
-  public function __construct( ? array $data = null)
+  public function __construct(?array $data = null)
   {
     parent::__construct($data);
     if (isset($this->usuari)) {
@@ -34,17 +35,17 @@ class Control extends Model
    * Desa a la base de dades el control actual. Si no conté ID es crearà un control nou a la base de dades. Si ja conté una ID, s'actualitzarà el control a la base de dades.
    * @return bool ``true`` si s'ha desat correctament, ``false`` en cas contrari.
    */
-  public function desar() : bool
+  public function desar(): bool
   {
     $arrayControl = get_object_vars($this);
-    if ($this->controlID === null) {
+    if ($this->controlId === null) {
       $arrayControl = $this->estandard($arrayControl);
       return parent::crear($arrayControl);
     }
-    unset($arrayControl['controlID']);
+    unset($arrayControl['controlId']);
     unset($arrayControl['usuari']);
     unset($arrayControl['user']);
-    return parent::updatePerId($arrayControl, $this->controlID);
+    return parent::updatePerId($arrayControl, $this->controlId);
   }
   // GETTERS
   /**
@@ -71,7 +72,7 @@ class Control extends Model
    */
   private function estandard(array $data): array
   {
-    unset($data['controlID']);
+    unset($data['controlId']);
     unset($data['data_hora']);
     unset($data['user']);
     return $data;

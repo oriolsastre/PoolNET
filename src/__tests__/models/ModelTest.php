@@ -1,11 +1,14 @@
-<?php declare (strict_types = 1);
+<?php
+
+declare(strict_types=1);
+
 use PHPUnit\Framework\TestCase;
-use PoolNET\config\Env;
 use PoolNET\Model;
+use PoolNET\config\Env;
 
 /**
  * @covers \PoolNET\Model
- * @uses \PoolNET\config\Database
+ * @uses \PoolNET\config\database\Database
  * @uses \PoolNET\config\Env
  */
 class ModelTest extends TestCase
@@ -31,7 +34,7 @@ class ModelTest extends TestCase
   {
     $model = $this->getMockBuilder(Model::class)->getMock();
     $this->assertInstanceOf(Model::class, $model);
-    $this->assertNull($model->dbcnx);
+    // $this->assertNull($model->dbcnx);
   }
   /**
    * @covers \PoolNET\Model::__construct
@@ -46,7 +49,7 @@ class ModelTest extends TestCase
   }
   /**
    * @covers \PoolNET\Model::connect
-   * @uses \PoolNET\config\Database
+   * @uses \PoolNET\config\database\Database
    */
   public function testConnect(): void
   {

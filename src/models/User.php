@@ -4,12 +4,12 @@ namespace PoolNET;
 
 class User extends Model
 {
-  protected static string $table = 'user';
-  protected static string $idKey = 'userID';
-  protected static array $uniqueKeyValues = ['userID', 'usuari', 'email'];
+  protected static string $table = 'usuari';
+  protected static string $idKey = 'usuariId';
+  protected static array $uniqueKeyValues = ['usuariId', 'usuari', 'email'];
 
   // Properties
-  public int $userID;
+  public int $usuariId;
   public string $usuari;
   protected string $email;
   protected string $salt;

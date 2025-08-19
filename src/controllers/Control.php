@@ -35,7 +35,7 @@ class Control implements Get, Post
     $userData = json_decode(getenv('JWT_USER_DATA'));
     try {
       $control = new DtoControl($body);
-      $control->usuari = (int) $userData->userID;
+      $control->usuari = (int) $userData->usuariId;
       if ($control->allNull()) {
         $res->withStatus(400)->toJson(["error" => "Mínim has d'omplir un camp."]);
       }
@@ -57,12 +57,12 @@ class Control implements Get, Post
     // parent::headers("PATCH");
     try {
       $userData = json_decode(getenv('JWT_USER_DATA'));
-      $controlAEditar = DtoControl::trobarPerUnic('controlID', (int) $body['controlID']);
+      $controlAEditar = DtoControl::trobarPerUnic('controlId', (int) $body['controlId']);
       if ($controlAEditar === null) {
         // parent::respostaSimple(404, ["error" => "No s'ha trobat el control."], false);
       }
       $controlAEditar->getDadesUsuari();
-      if ($controlAEditar->user->userID != (int) $userData->userID && (int) $userData->nivell > 0) {
+      if ($controlAEditar->user->usuariId != (int) $userData->usuariId && (int) $userData->nivell > 0) {
         // parent::respostaSimple(403, ["error" => "Només pots editar controls propis."], false);
       }
       foreach ($body as $camp => $valor) {
@@ -89,12 +89,12 @@ class Control implements Get, Post
     // parent::headers("DELETE");
     try {
       $userData = json_decode(getenv('JWT_USER_DATA'));
-      $controlAEliminar = DtoControl::trobarPerUnic('controlID', (int) $body['controlID']);
+      $controlAEliminar = DtoControl::trobarPerUnic('controlId', (int) $body['controlId']);
       if ($controlAEliminar === null) {
         // parent::respostaSimple(404, ["error" => "No s'ha trobat el control."], false);
       }
       $controlAEliminar->getDadesUsuari();
-      if ($controlAEliminar->user->userID != (int) $userData->userID && (int) $userData->nivell > 0) {
+      if ($controlAEliminar->user->usuariId != (int) $userData->usuariId && (int) $userData->nivell > 0) {
         // parent::respostaSimple(403, ["error" => "Només pots eliminar controls propis."], false);
       }
       if ($controlAEliminar->borrar()) {

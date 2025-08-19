@@ -1,25 +1,19 @@
 <?php
 
-namespace PoolNET\config;
+namespace PoolNET\config\database;
 
 use PDO;
 use PDOException;
+use PoolNET\interface\config\Database as DatabaseInterface;
 
-class Database
+class Database implements DatabaseInterface
 {
-  // Params
-  private string $host;
   private string $dbName;
-  private string $user;
-  private string $password;
   private ?PDO $dbcnx;
 
   public function __construct()
   {
-    $this->host = (string) getenv('ENV_DB_HOST');
     $this->dbName = (string) getenv('ENV_DB_NAME');
-    $this->user = (string) getenv('ENV_DB_USER');
-    $this->password = (string) getenv('ENV_DB_PSWD');
   }
   /**
    * Connecta a la base de dades
@@ -30,10 +24,9 @@ class Database
   {
     // try {
     $this->dbcnx = new PDO(
-      'mysql:host=' . $this->host . ';dbname=' . $this->dbName,
-      $this->user,
-      $this->password,
-      [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION] // Això per poder capturar errors diria.
+      // 'mysql:host=' . $this->host . ';dbname=' . $this->dbName,
+      dsn: 'sqlite:' . __DIR__ . '/' . $this->dbName . '.db',
+      options: [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION] // Això per poder capturar errors diria.
     );
     // } catch (PDOException $err) {
     // echo 'Database connection failed: ' . $err->getMessage();

@@ -6,9 +6,9 @@ class Accio
 {
 
   private $dbcnx;
-  private $table = 'piscinaAccio';
+  private $table = 'accio';
 
-  public ?int $accioID;
+  public ?int $accioId;
   public ?string $data_hora;
   public ?int $ph;
   public ?int $clor;
@@ -27,7 +27,7 @@ class Accio
 
   public function read($limit = 20)
   {
-    $query = 'SELECT ' . $this->table . '.*, userID, user.usuari AS usuari FROM ' . $this->table . ' JOIN user ON ' . $this->table . '.usuari=userID ORDER BY data_hora DESC LIMIT ' . $limit;
+    $query = 'SELECT ' . $this->table . '.*, usuariId, user.usuari AS usuari FROM ' . $this->table . ' JOIN user ON ' . $this->table . '.usuari=usuariId ORDER BY data_hora DESC LIMIT ' . $limit;
 
     // Prepare statement
     $stmt = $this->dbcnx->prepare($query);

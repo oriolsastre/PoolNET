@@ -11,7 +11,7 @@ class Validator
   /**
    * Parseja el cos de la petició i el retorna com a array.
    * @param Request $req
-   * @param array<string, mixed>|null $obligatori [Opcional] Valors necessaris que han der ser al cos de la petició i el seu tipus. Per exemple, ``['controlID' => 'integer']``.
+   * @param array<string, mixed>|null $obligatori [Opcional] Valors necessaris que han der ser al cos de la petició i el seu tipus. Per exemple, ``['controlId' => 'integer']``.
    * @return bool
    */
   public static function requiredFields(Request &$req, Response &$res, array $obligatori): bool

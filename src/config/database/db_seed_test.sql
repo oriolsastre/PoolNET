@@ -1,52 +1,7 @@
-CREATE TABLE `user` (
-    `userID` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `usuari` varchar(20) NOT NULL,
-    `email` varchar(50) NOT NULL,
-    `salt` varchar(20) NOT NULL,
-    `hash` char(32) NOT NULL,
-    `nivell` tinyint(4) NOT NULL DEFAULT 2,
-    `data_creacio` date NOT NULL
-);
-
-CREATE TABLE `piscinacontrol` (
-    `controlID` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `data_hora` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `ph` decimal(3, 2) DEFAULT NULL,
-    `clor` decimal(3, 2) DEFAULT NULL,
-    `alcali` float DEFAULT NULL,
-    `temperatura` tinyint(4) DEFAULT NULL,
-    `transparent` tinyint(4) DEFAULT NULL,
-    `fons` tinyint(4) DEFAULT NULL,
-    `usuari` int(11) NOT NULL
-);
-
-ALTER TABLE `piscinacontrol`
-ADD CONSTRAINT `FK_Usuari_User` FOREIGN KEY (`usuari`) REFERENCES `user` (`userID`) ON UPDATE CASCADE;
-
-COMMIT;
-
-CREATE TABLE `piscinaaccio` (
-    `accioID` int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `data_hora` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `ph` tinyint(4) DEFAULT NULL,
-    `clor` tinyint(4) DEFAULT NULL,
-    `antialga` tinyint(4) DEFAULT NULL,
-    `fluoculant` tinyint(4) DEFAULT NULL,
-    `aspirar` tinyint(4) DEFAULT NULL,
-    `alcali` tinyint(4) DEFAULT NULL,
-    `aglutinant` tinyint(4) DEFAULT NULL,
-    `usuari` int(11) NOT NULL
-);
-
-ALTER TABLE `piscinaaccio`
-ADD CONSTRAINT `FK_Usuari_piscinaAccio` FOREIGN KEY (`usuari`) REFERENCES `user` (`userID`) ON UPDATE CASCADE;
-
-COMMIT;
-
 -- Seed
 INSERT INTO
-    `user` (
-        `userID`,
+    `usuari` (
+        `usuariID`,
         `usuari`,
         `email`,
         `salt`,
@@ -74,8 +29,8 @@ VALUES (
     );
 
 INSERT INTO
-    `piscinacontrol` (
-        `controlID`,
+    `control` (
+        `controlId`,
         `data_hora`,
         `ph`,
         `clor`,
@@ -185,7 +140,7 @@ VALUES (
         1
     ),
     (
-        110,
+        10,
         '2023-07-08 17:30:19',
         '7.20',
         '0.10',
@@ -197,8 +152,8 @@ VALUES (
     );
 
 INSERT INTO
-    `piscinaaccio` (
-        `accioID`,
+    `accio` (
+        `accioId`,
         `data_hora`,
         `ph`,
         `clor`,

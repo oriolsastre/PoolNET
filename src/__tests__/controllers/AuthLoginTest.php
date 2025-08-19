@@ -16,7 +16,7 @@ class AuthLoginTest extends ReqResTestCase
     }
     /**
      * @covers ::post
-     * @uses \PoolNET\config\Database
+     * @uses \PoolNET\config\database\Database
      * @uses \PoolNET\config\Env
      * @uses \PoolNET\config\Request
      * @uses \PoolNET\config\Response

@@ -1,12 +1,15 @@
-<?php declare (strict_types = 1);
+<?php
+
+declare(strict_types=1);
+
 use PHPUnit\Framework\TestCase;
-use PoolNET\config\Env;
 use PoolNET\Control;
+use PoolNET\config\Env;
 
 /**
  * @covers \PoolNET\Control
  * @uses \PoolNET\Model
- * @uses \PoolNET\config\Database
+ * @uses \PoolNET\config\database\Database
  * @uses \PoolNET\config\Env
  */
 class ControlTest extends TestCase
@@ -25,11 +28,11 @@ class ControlTest extends TestCase
     $this->assertInstanceOf(Control::class, $control);
     $reflectControl = new ReflectionObject($control);
     $reflectControl->getProperty('table')->setAccessible(true);
-    $this->assertSame('piscinaControl', $reflectControl->getProperty('table')->getValue($control));
+    $this->assertSame('control', $reflectControl->getProperty('table')->getValue($control));
     $reflectControl->getProperty('idKey')->setAccessible(true);
-    $this->assertSame('controlID', $reflectControl->getProperty('idKey')->getValue($control));
+    $this->assertSame('controlId', $reflectControl->getProperty('idKey')->getValue($control));
     $reflectControl->getProperty('uniqueKeyValues')->setAccessible(true);
-    $this->assertSame(['controlID'], $reflectControl->getProperty('uniqueKeyValues')->getValue($control));
+    $this->assertSame(['controlId'], $reflectControl->getProperty('uniqueKeyValues')->getValue($control));
   }
   /**
    * @covers \PoolNET\Control::__construct
@@ -48,7 +51,7 @@ class ControlTest extends TestCase
     ];
     $control = new Control($data);
     $this->assertInstanceOf(Control::class, $control);
-    $this->assertNull($control->controlID);
+    $this->assertNull($control->controlId);
     $this->assertSame($data['data_hora'], $control->data_hora);
     $this->assertSame($data['ph'], $control->ph);
     $this->assertSame($data['clor'], $control->clor);
@@ -77,7 +80,7 @@ class ControlTest extends TestCase
     ];
     $control = new Control($data);
     $this->assertInstanceOf(Control::class, $control);
-    $this->assertNull($control->controlID);
+    $this->assertNull($control->controlId);
     $this->assertSame($data['data_hora'], $control->data_hora);
     $this->assertSame($data['ph'], $control->ph);
     $this->assertSame($data['clor'], $control->clor);
@@ -86,7 +89,7 @@ class ControlTest extends TestCase
     $this->assertSame($data['fons'], $control->fons);
     $this->assertSame($data['usuari'], $control->usuari);
     $this->assertInstanceOf('PoolNET\User', $control->user);
-    $this->assertSame($data['usuari'], $control->user->userID);
+    $this->assertSame($data['usuari'], $control->user->usuariId);
   }
   /**
    * @covers \PoolNET\Control::getDadesUsuari
@@ -103,7 +106,7 @@ class ControlTest extends TestCase
     $control->usuari = 1;
     $this->assertTrue($control->getDadesUsuari());
     $this->assertInstanceOf('PoolNET\User', $control->user);
-    $this->assertSame(1, $control->user->userID);
+    $this->assertSame(1, $control->user->usuariId);
 
     $control->usuari = 90; //No hauria d'existir
     $this->assertFalse($control->getDadesUsuari());
@@ -116,10 +119,10 @@ class ControlTest extends TestCase
     $control = new Control();
     $this->assertTrue($control->allNull());
 
-    $control->controlID = 1;
+    $control->controlId = 1;
     $control->usuari = 1;
     $control->getDadesUsuari();
-    $this->assertNotNull($control->controlID);
+    $this->assertNotNull($control->controlId);
     $this->assertNotNull($control->usuari);
     $this->assertNotNull($control->user);
     $this->assertNotNull($control->data_hora);

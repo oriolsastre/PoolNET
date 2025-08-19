@@ -96,7 +96,7 @@ describe("Testejant l'endpoint PATCH de control", () => {
         });
         it("Hauria de fallar amb valor invàlid", async () => {
           const response = await req.patch("/").set("Cookie", cookie).send({
-            controlID: ultimControl[1].controlID,
+            controlId: ultimControl[1].controlId,
             ph: 7.0,
             transparent: "Molt",
           });
@@ -105,7 +105,7 @@ describe("Testejant l'endpoint PATCH de control", () => {
         });
         it("Hauria de fallar amb tot null", async () => {
           const response = await req.patch("/").set("Cookie", cookie).send({
-            controlID: ultimControl[1].controlID,
+            controlId: ultimControl[1].controlId,
             ph: null,
             clor: null,
             alcali: null,
@@ -118,7 +118,7 @@ describe("Testejant l'endpoint PATCH de control", () => {
         });
         it("Hauria de fallar si no troba el control", async () => {
           const response = await req.patch("/").set("Cookie", cookie).send({
-            controlID: -5,
+            controlId: -5,
             ph: 7.2,
             clor: 0.1,
             alcali: 1.1,
@@ -132,7 +132,7 @@ describe("Testejant l'endpoint PATCH de control", () => {
       describe("Problemes de permisos", () => {
         it("Hauria de fallar si intenta modificar un control aliè", async () => {
           const response = await req.patch("/").set("Cookie", cookie).send({
-            controlID: ultimControl[0].controlID,
+            controlId: ultimControl[0].controlId,
             ph: 8.2,
             clor: 0.1,
             alcali: null,
@@ -151,7 +151,7 @@ describe("Testejant l'endpoint PATCH de control", () => {
   describe("Testejant l'èxit", () => {
     it("Hauria de modificar un control propi", async () => {
       const body = {
-        controlID: ultimControl[1].controlID,
+        controlId: ultimControl[1].controlId,
         ph: 8,
         clor: 0.1,
         alcali: null,
@@ -166,7 +166,7 @@ describe("Testejant l'endpoint PATCH de control", () => {
     });
     it("L'admin hauria de poder editar un control aliè", async () => {
       const body = {
-        controlID: ultimControl[1].controlID,
+        controlId: ultimControl[1].controlId,
         ph: 4,
         clor: 3.5,
         fons: null,
@@ -208,7 +208,7 @@ describe("Testejant l'enpoint DELETE de control", () => {
       it("Hauria de fallar amb body invàlid (valor incorrecte)", async () => {
         const response = await req
           .delete("/")
-          .send({ controlID: "dos" })
+          .send({ controlId: "dos" })
           .set("Cookie", cookie);
         expect(response.status).toBe(400);
         expect(response.body.error).toBe(
@@ -219,7 +219,7 @@ describe("Testejant l'enpoint DELETE de control", () => {
       it("Hauria de fallar si no troba el control", async () => {
         const response = await req
           .delete("/")
-          .send({ controlID: -5 })
+          .send({ controlId: -5 })
           .set("Cookie", cookie);
         expect(response.status).toBe(404);
         expect(response.body.error).toBe("No s'ha trobat el control.");
@@ -227,7 +227,7 @@ describe("Testejant l'enpoint DELETE de control", () => {
       it("Hauria de fallar si intenta eliminar un control aliè", async () => {
         const response = await req
           .delete("/")
-          .send({ controlID: ultimControl[0].controlID })
+          .send({ controlId: ultimControl[0].controlId })
           .set("Cookie", cookie);
         expect(response.status).toBe(403);
         expect(response.body.error).toBe(
@@ -240,14 +240,14 @@ describe("Testejant l'enpoint DELETE de control", () => {
     it("Hauria de poder eliminar un control propi", async () => {
       const response = await req
         .delete("/")
-        .send({ controlID: ultimControl.pop().controlID })
+        .send({ controlId: ultimControl.pop().controlId })
         .set("Cookie", cookie);
       expect(response.status).toBe(204);
     });
     it("L'admin hauria de poder eliminar un control aliè", async () => {
       const response = await req
         .delete("/")
-        .send({ controlID: ultimControl.pop().controlID })
+        .send({ controlId: ultimControl.pop().controlId })
         .set("Cookie", cookieAdmin);
       expect(response.status).toBe(204);
     });

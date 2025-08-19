@@ -1,4 +1,5 @@
 <?php
+
 use PoolNET\controller\Control;
 use PoolNET\MW\AuthMW;
 use PoolNET\MW\Validator;
@@ -12,12 +13,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   Control::post($body);
 } elseif ($_SERVER['REQUEST_METHOD'] == 'PATCH') {
   AuthMW::rutaProtegida();
-  $body = Validator::parseBody(['controlID' => "integer"]);
+  $body = Validator::parseBody(['controlId' => "integer"]);
   Validator::validateBodyWithClass($body, 'PoolNET\Control');
   Control::patch($body);
 } elseif ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
   AuthMW::rutaProtegida();
-  $body = Validator::parseBody(['controlID' => "integer"]);
+  $body = Validator::parseBody(['controlId' => "integer"]);
   Validator::validateBodyWithClass($body, 'PoolNET\Control');
   Control::delete($body);
 } else {

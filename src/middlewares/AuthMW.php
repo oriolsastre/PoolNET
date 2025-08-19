@@ -30,10 +30,10 @@ class AuthMW extends Controlador
       self::initJwtHandler();
     }
     $data = self::$jwt->jwtDecodeData($_COOKIE['token']);
-    if (!isset($data->userID)) {
+    if (!isset($data->usuariId)) {
       return false;
     }
-    $user = User::trobarPerId((int) $data->userID);
+    $user = User::trobarPerId((int) $data->usuariId);
     if ($user === null) {
       return false;
     }

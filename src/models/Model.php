@@ -1,9 +1,10 @@
 <?php
+
 namespace PoolNET;
 
 use Exception;
 use PDO;
-use PoolNET\config\Database;
+use PoolNET\config\database\Database;
 use PoolNET\error\InvalidUniqueKey;
 
 /**
@@ -132,7 +133,9 @@ abstract class Model
       }
 
       // Si hi ha condicions i no s'especifica límit, el límit passa a ser 1000 (com si no n'hi hagués per mostrar-los tots, però per seguretat limitat)
-      if (func_num_args() === 1) {$limit = 1000;}
+      if (func_num_args() === 1) {
+        $limit = 1000;
+      }
     }
     if ($limit > 0) {
       $query .= ' LIMIT ' . $limit;

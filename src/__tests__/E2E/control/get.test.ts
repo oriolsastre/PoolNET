@@ -15,7 +15,7 @@ describe("Testejant l'endpoint GET de control", () => {
     expect(response.body).toBeInstanceOf(Array);
     expect(response.body.length).toBeLessThanOrEqual(20);
     response.body.forEach((control: any) => {
-      expect(typeof control.controlID).toBe("number");
+      expect(typeof control.controlId).toBe("number");
       expect(typeof control.data_hora).toBe("string");
       expect(isNullOrNumber(control.ph)).toBe(true);
       expect(isNullOrNumber(control.clor)).toBe(true);
@@ -25,7 +25,7 @@ describe("Testejant l'endpoint GET de control", () => {
       expect(isNullOrNumber(control.fons)).toBe(true);
       expect(typeof control.usuari).toBe("number");
       expect(typeof control.user).toBe("object");
-      expect(typeof control.user.userID).toBe("number");
+      expect(typeof control.user.usuariId).toBe("number");
       expect(typeof control.user.usuari).toBe("string");
       expect(typeof control.user.nivell).toBe("number");
     });

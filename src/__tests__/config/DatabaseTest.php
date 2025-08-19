@@ -3,11 +3,11 @@
 declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
-use PoolNET\config\Database;
 use PoolNET\config\Env;
+use PoolNET\config\database\Database;
 
 /**
- * @covers \PoolNET\config\Database
+ * @covers \PoolNET\config\database\Database
  */
 class DatabaseTest extends TestCase
 {
@@ -16,7 +16,7 @@ class DatabaseTest extends TestCase
     Env::executar();
   }
   /**
-   * @covers \PoolNET\config\Database::__construct
+   * @covers \PoolNET\config\database\Database::__construct
    * @uses \PoolNET\config\Env
    */
   public function testConstructor(): void
@@ -25,14 +25,8 @@ class DatabaseTest extends TestCase
     $database = new Database();
     $this->assertInstanceOf(Database::class, $database);
     $reflectedDB = new ReflectionObject($database);
-    $reflectedDB->getProperty('host')->setAccessible(true);
-    $this->assertSame(getenv('ENV_DB_HOST'), $reflectedDB->getProperty('host')->getValue($database));
     $reflectedDB->getProperty('dbName')->setAccessible(true);
     $this->assertSame(getenv('ENV_DB_NAME'), $reflectedDB->getProperty('dbName')->getValue($database));
-    $reflectedDB->getProperty('user')->setAccessible(true);
-    $this->assertSame(getenv('ENV_DB_USER'), $reflectedDB->getProperty('user')->getValue($database));
-    $reflectedDB->getProperty('password')->setAccessible(true);
-    $this->assertSame(getenv('ENV_DB_PSWD'), $reflectedDB->getProperty('password')->getValue($database));
   }
   /**
    * @coversNothing
@@ -46,7 +40,7 @@ class DatabaseTest extends TestCase
     return $reflectionProperty->getValue((object) $reflectionClass->newInstance());
   }
   /**
-   * @covers \PoolNET\config\Database::connect
+   * @covers \PoolNET\config\database\Database::connect
    * @uses \PoolNET\config\Env
    */
   public function testConnect(): void

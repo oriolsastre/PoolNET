@@ -13,4 +13,7 @@ node_modules
 .htaccess
 /src/config/env.php
 /src/config/env-sastre.php
+/src/config/database/PoolNET.db
+/src/config/database/db_seed_prod*
+/src/config/database/db_init_local.sh
 /src/__tests__/E2E/constants.ts

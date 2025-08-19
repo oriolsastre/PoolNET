@@ -10,10 +10,7 @@ class Env
    */
   public static function executar(): void
   {
-    putenv('ENV_DB_HOST=localhost');
     putenv('ENV_DB_NAME=PoolNET');
-    putenv('ENV_DB_USER=root');
-    putenv('ENV_DB_PSWD=root');
 
     putenv('ENV_HEADERS_ALLOW_ORIGIN=*');
     putenv('ENV_HEADERS_ALLOW_HEADERS=*');
