@@ -14,7 +14,7 @@ class User extends Model
   protected string $email;
   protected string $salt;
   protected string $hash;
-  public int $nivell;
+  protected int $nivell;
   protected string $data_creacio;
 
   // MÈTODES ESTÀTICS CRUD
@@ -27,6 +27,10 @@ class User extends Model
   public function getPrivateEmail(): string
   {
     return $this->email;
+  }
+  public function getNivell(): int
+  {
+    return $this->nivell;
   }
   // ALTRES MÈTODES
   /**

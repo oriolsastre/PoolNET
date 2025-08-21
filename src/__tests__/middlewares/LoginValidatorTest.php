@@ -17,14 +17,14 @@ class LoginValidatorTest extends ReqResTestCase
     public function testUse()
     {
         $this->newReqRes();
-        $this->req->body = ["usuari" => "Test", "password" => "Test123"];
+        $this->req = $this->req->withBody(["usuari" => "Test", "password" => "Test123"]);
 
         $validator = new LoginValidator();
         $result = $validator->use($this->req, $this->res);
         $this->assertTrue($result);
 
         // Test falla per tipus invalid
-        $this->req->body = ["usuari" => "Test", "password" => 123];
+        $this->req = $this->req->withBody(["usuari" => "Test", "password" => 123]);
         ob_start();
         $result = $validator->use($this->req, $this->res);
         $this->assertFalse($result);
@@ -36,7 +36,7 @@ class LoginValidatorTest extends ReqResTestCase
         ob_end_clean();
 
         // Test falla per falta de camp obligatori
-        $this->req->body = ["usuari" => "Test"];
+        $this->req = $this->req->withBody(["usuari" => "Test"]);
         ob_start();
         $result = $validator->use($this->req, $this->res);
         $this->assertFalse($result);

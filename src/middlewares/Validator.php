@@ -3,7 +3,6 @@
 namespace PoolNET\MW;
 
 use PoolNET\interface\config\{Request, Response};
-use PoolNET\interface\Middleware;
 use ReflectionClass;
 
 class Validator
@@ -14,7 +13,7 @@ class Validator
    * @param array<string, mixed>|null $obligatori [Opcional] Valors necessaris que han der ser al cos de la petició i el seu tipus. Per exemple, ``['controlId' => 'integer']``.
    * @return bool
    */
-  public static function requiredFields(Request &$req, Response &$res, array $obligatori): bool
+  public function requiredFields(Request &$req, Response &$res, array $obligatori): bool
   {
     $body = $req->getParsedBody();
     if ($obligatori !== null) {
@@ -45,7 +44,7 @@ class Validator
    * @param string $class Classe que ha de validar els paràmetres.
    * @return void Respon amb 400 si algun valor no és compatible.
    */
-  public static function validateBodyWithClass(array $body, string $class): void
+  public function validateBodyWithClass(array $body, string $class): void
   {
     $reflector = new ReflectionClass($class);
     foreach ($body as $property => $value) {

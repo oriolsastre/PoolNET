@@ -3,6 +3,7 @@
 namespace PoolNET\config;
 
 use PDOException;
+use PoolNET\error\Forbidden;
 use PoolNET\interface\config\Response as ResponseInterface;
 use Throwable;
 
@@ -58,8 +59,11 @@ class Response implements ResponseInterface
                 // TODO: Log error per a us intern
                 $this->withStatus(500)->toJson(['error' => "Error amb la base de dades"]);
                 break;
+            case $th instanceof Forbidden:
+                $this->withStatus(403)->toJson(['error' => "No tens permisos per aquesta acció"]);
+                break;
             default:
-                $this->withStatus(500)->toJson(null);
+                $this->withStatus($th->getCode())->toJson(['error' => "Alguna cosa ha fallat"]);
                 break;
         }
     }

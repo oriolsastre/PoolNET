@@ -2,10 +2,11 @@
 
 namespace PoolNET\service;
 
-use PoolNET\interface\config\{Request, Response};
 use PoolNET\interface\Controller\{Controlador, Get, Post, Patch, Delete};
 use PoolNET\interface\Middleware;
+use PoolNET\interface\config\{Request, Response};
 use PoolNET\service\Router;
+use Throwable;
 
 class RouterJson extends Router
 {
@@ -67,13 +68,19 @@ class RouterJson extends Router
     }
     return false;
   }
-  protected function useMethod(Request $req, Response $res, array $controller): bool
+  protected function useMethod(Request $req, Response $res, array $controllerArray): bool
   {
     $method = $req->getMethod();
-    if (isset($controller[$method])) {
-      $mwArray = $controller[$method]["middlewares"];
+    if (isset($controllerArray[$method])) {
+      $mwArray = $controllerArray[$method]["middlewares"];
       if ($this->useMw($req, $res, $mwArray)) {
-        $controller[$method]["controller"]::$method($req, $res);
+        /** @var Controlador $controller */
+        $controller = $controllerArray[$method]["controller"];
+        try {
+          $controller->$method($req, $res);
+        } catch (Throwable $th) {
+          $res->handleError($th);
+        }
       }
       return true;
     }

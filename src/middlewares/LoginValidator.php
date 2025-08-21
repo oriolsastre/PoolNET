@@ -10,6 +10,6 @@ class LoginValidator extends Validator implements Middleware
 
     public function use(Request &$req, Response &$res): bool
     {
-        return self::requiredFields($req, $res, ["usuari" => "string", "password" => "string"]);
+        return $this->requiredFields($req, $res, ["usuari" => "string", "password" => "string"]);
     }
 }

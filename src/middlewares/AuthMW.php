@@ -2,56 +2,38 @@
 
 namespace PoolNET\MW;
 
-use PoolNET\service\Controlador;
-use PoolNET\service\JwtHandler;
 use PoolNET\User;
+use PoolNET\error\Forbidden;
+use PoolNET\interface\Middleware;
+use PoolNET\interface\config\Request;
+use PoolNET\interface\config\Response;
+use PoolNET\service\JwtHandler;
 
-class AuthMW extends Controlador
+class AuthMW implements Middleware
 {
-  private static ?JwtHandler $jwt = null;
-  /**
-   * Inicia el JWTHandler
-   * @return void
-   */
-  private static function initJwtHandler(): void
+  private JwtHandler $jwt;
+  public function __construct(private int $nivell = 0)
   {
-    self::$jwt = new JwtHandler();
+    $this->jwt = new JwtHandler();
   }
-  /**
-   * Valida el token rebut a la cookie de la petició.
-   * @return boolean
-   */
-  private static function isValid(): bool
+  public function use(Request &$req, Response &$res): bool
   {
-    if (!isset($_COOKIE['token'])) {
-      return false;
+    $jwt_token = $req->getCookieParams()['token'] ?? null;
+    if ($jwt_token === null) {
+      throw new Forbidden();
     }
-    if (self::$jwt === null) {
-      self::initJwtHandler();
-    }
-    $data = self::$jwt->jwtDecodeData($_COOKIE['token']);
+    $data = $this->jwt->jwtDecodeData($jwt_token);
     if (!isset($data->usuariId)) {
-      return false;
+      throw new Forbidden();
     }
-    $user = User::trobarPerId((int) $data->usuariId);
+    $user = User::trobarPerId($data->usuariId);
     if ($user === null) {
-      return false;
+      throw new Forbidden();
     }
+    if ($user->getNivell() < $this->nivell) {
+      throw new Forbidden();
+    }
+    // TODO: Posar l'usuari al req
     return true;
-  }
-  /**
-   * Comprova el token rebut a les cookies de la petició i permet seguir si aquest és vàlid. Si no, atura la petició amb un 401.
-   * @return void Les dades de l'usuari són afegides a la variable d'entorn JWT_USER_DATA
-   */
-  public static function rutaProtegida(): void
-  {
-    if (!self::isValid()) {
-      self::respostaSimple(401, ["error" => "No autoritzat"], true);
-    }
-    if (self::$jwt === null) {
-      self::initJwtHandler();
-    }
-    $userData = self::$jwt->jwtDecodeData($_COOKIE['token']);
-    putenv('JWT_USER_DATA=' . json_encode($userData));
   }
 }

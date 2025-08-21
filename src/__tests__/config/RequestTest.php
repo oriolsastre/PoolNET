@@ -32,6 +32,16 @@ class RequestTest extends TestCase
     }
     /**
      * @covers \PoolNET\config\Request
+     * @covers ::withPath
+     */
+    public function testWithPath(): void
+    {
+        $request = new Request();
+        $newPath = "/custom";
+        $this->assertSame($newPath, $request->withPath($newPath)->getPath());
+    }
+    /**
+     * @covers \PoolNET\config\Request
      * @covers ::getParams
      */
     public function testGetParams(): void
@@ -56,6 +66,16 @@ class RequestTest extends TestCase
     }
     /**
      * @covers \PoolNET\config\Request
+     * @covers ::withMethod
+     */
+    public function testWithMethod(): void
+    {
+        $request = new Request();
+        $request = $request->withMethod("post");
+        $this->assertSame("post", $request->getMethod());
+    }
+    /**
+     * @covers \PoolNET\config\Request
      * @covers ::getHeaders
      */
     public function testGetHeaders(): void
@@ -76,5 +96,35 @@ class RequestTest extends TestCase
         $request = new Request();
         $this->assertSame([], $request->getParsedBody());
         // TODO: Testejar amb un body amb dades. Potser mockejant.
+    }
+    /**
+     * @covers \PoolNET\config\Request
+     * @covers ::withBody
+     */
+    public function testWithBody(): void
+    {
+        $request = new Request();
+        $request = $request->withBody(["key" => "value"]);
+        $this->assertSame(["key" => "value"], $request->getParsedBody());
+    }
+    /**
+     * @covers \PoolNET\config\Request
+     * @covers ::getCookieParams
+     */
+    public function testGetCookieParams(): void
+    {
+        $request = new Request();
+        $this->assertSame($_COOKIE, $request->getCookieParams());
+    }
+    /**
+     * @covers \PoolNET\config\Request
+     * @covers ::withCookieParams
+     */
+    public function testWithCookieParams(): void
+    {
+        $request = new Request();
+        $request = $request->withCookieParams(["key" => "value"]);
+        $this->assertArrayHasKey("key", $request->getCookieParams());
+        $this->assertSame("value", $request->getCookieParams()["key"]);
     }
 }

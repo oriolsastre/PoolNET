@@ -13,7 +13,7 @@ class AuthLogin implements Post
    * @param array<string, mixed> $body El cos de la petició
    * @return void
    */
-  public static function post(Request $req, Response $res): void
+  public function post(Request $req, Response $res): void
   {
     $body = $req->getParsedBody();
     $user = User::trobarPerUnic('usuari', $body['usuari']);
@@ -25,7 +25,7 @@ class AuthLogin implements Post
     $token = $jwt->jwtEncodeData('piscina', [
       'usuariId' => $user->usuariId,
       'usuari' => $user->usuari,
-      'nivell' => $user->nivell,
+      'nivell' => $user->getNivell(),
       'email' => $user->getPrivateEmail(),
     ]);
 

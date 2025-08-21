@@ -2,15 +2,17 @@
 
 declare(strict_types=1);
 
-use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Constraint\Constraint;
+use PoolNET\interface\config\Request;
+use PoolNET\interface\config\Response;
 use PoolNET\service\Router;
-use PoolNET\service\RouterJson;
 use PoolNET\service\RouterPage;
+use PoolNET\test\ReqResTestCase;
 
 /**
  * @coversDefaultClass \PoolNET\service\Router
  */
-class RouterTest extends TestCase
+class RouterTest extends ReqResTestCase
 {
     private ReflectionProperty $formatProp;
     private ReflectionProperty $routersProp;
@@ -58,6 +60,34 @@ class RouterTest extends TestCase
         $this->assertEquals(1, count(get_object_vars($this->routersProp->getValue($router1))));
         $this->assertInstanceOf(Router::class, $this->routersProp->getValue($router1)->{$pageRoute});
         $this->assertEquals($router2, $this->routersProp->getValue($router1)->{$pageRoute});
+    }
+    /**
+     * @covers ::use
+     * @covers ::useRouter
+     * @uses \PoolNET\service\Router
+     * @uses \PoolNET\config\Request
+     */
+    public function testUse(): void
+    {
+        // Test exit. Es crida el router afegit. 
+        $this->newReqRes();
+        $req = $this->req->withPath("/mock/test");
+        $res = $this->res;
+
+        $router = new Router("/mock");
+        $routerMock = $this->createMock(Router::class);
+        $routerMock->prefix = "/test";
+        $routerMock->expects($this->once())->method('use')->with($this->isInstanceOf(Request::class), $this->isInstanceOf(Response::class));
+        /** @var Router $routerMock */
+        $router->addRouter("/test", $routerMock);
+        $this->assertTrue($router->use($req, $res));
+
+        // Test false
+        $this->newReqRes();
+        $req = $this->req->withPath("/api/non/existent");
+        $res = $this->res;
+        $router = new Router();
+        $this->assertFalse($router->use($req, $res));
     }
     /**
      * @covers ::removePrefix

@@ -2,8 +2,8 @@
 
 namespace PoolNET\route\api;
 
-use PoolNET\controller\{Control, AuthLogin};
 use PoolNET\MW\LoginValidator;
+use PoolNET\controller\{Control, AuthLogin};
 use PoolNET\service\MiddlewareArray;
 use PoolNET\service\RouterJson;
 

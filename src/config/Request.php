@@ -7,12 +7,16 @@ use PoolNET\interface\config\Request as RequestInterface;
 class Request implements RequestInterface
 {
     private string $uri;
-    public ?array $body;
     public ?array $headers;
+    private ?array $cookieParams;
+    private ?string $method;
+    private ?array $body;
     public function __construct()
     {
         $this->uri = $this->getUri();
         $this->headers = $this->getHeaders();
+        $this->cookieParams = $_COOKIE;
+        $this->method = strtolower($_SERVER['REQUEST_METHOD']);
         $this->body = $this->parseBody();
     }
 
@@ -25,13 +29,23 @@ class Request implements RequestInterface
         $route = explode("/PoolNET", $this->uri)[1];
         return explode('?', $route)[0];
     }
+    public function withPath(string $path): self
+    {
+        $this->uri = "/PoolNET" . $path;
+        return $this;
+    }
     public function getParams(): string
     {
         return explode('?', $this->uri)[1] ?? "";
     }
     public function getMethod(): string
     {
-        return strtolower($_SERVER['REQUEST_METHOD']);
+        return $this->method;
+    }
+    public function withMethod(string $method): self
+    {
+        $this->method = strtolower($method);
+        return $this;
     }
     public function getHeaders(): array
     {
@@ -50,6 +64,17 @@ class Request implements RequestInterface
         }
         return $headers;
     }
+    public function getCookieParams(): array
+    {
+        return $this->cookieParams;
+    }
+    public function withCookieParams(array $cookieParams): self
+    {
+        foreach ($cookieParams as $key => $value) {
+            $this->cookieParams[$key] = $value;
+        }
+        return $this;
+    }
     public function getParsedBody(): array
     {
         return $this->body ? $this->body : [];
@@ -60,5 +85,10 @@ class Request implements RequestInterface
             return $_POST;
         }
         return json_decode(file_get_contents('php://input'), true);
+    }
+    public function withBody(array $body): self
+    {
+        $this->body = $body;
+        return $this;
     }
 }

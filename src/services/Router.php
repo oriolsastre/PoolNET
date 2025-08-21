@@ -2,8 +2,8 @@
 
 namespace PoolNET\service;
 
-use PoolNET\interface\config\{Request, Response};
 use PoolNET\interface\Middleware;
+use PoolNET\interface\config\{Request, Response};
 use stdClass;
 
 class Router
@@ -46,8 +46,8 @@ class Router
 
   protected function removePrefix(string $string): string
   {
-    if (0 === strpos($string, $this->prefixLlarg)) {
-      $string = substr($string, strlen($this->prefixLlarg));
+    if (0 === strpos($string, $this->prefixLlarg ?? '')) {
+      $string = substr($string, strlen($this->prefixLlarg ?? ''));
     }
     return $this->removeClosingSlash($string);
   }
