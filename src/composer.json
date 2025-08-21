@@ -1,0 +1,29 @@
+{
+    "require": {
+        "firebase/php-jwt": "^6.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "PoolNET\\": "models/",
+            "PoolNET\\config\\": "config/",
+            "PoolNET\\interface\\": "interfaces/",
+            "PoolNET\\MW\\": "middlewares/",
+            "PoolNET\\error\\": "models/errors/",
+            "PoolNET\\service\\": "services/",
+            "PoolNET\\controller\\": "controllers/",
+            "PoolNET\\route\\": "routes/",
+            "PoolNET\\page\\": "pages/"
+        },
+        "classmap": ["interfaces/"],
+        "files": [
+            "routes/index.php",
+            "pages/index.php"
+        ]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.2"
+    },
+    "autoload-dev": {
+        "classmap": ["__tests__/"]
+    }
+}
